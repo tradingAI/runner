@@ -51,4 +51,4 @@ services:
       - minio
     restart: always
     volumes:
-      - .:/root/runner
+      - ./:/go/src/github.com/tradingAI/runner
