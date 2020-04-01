@@ -12,6 +12,7 @@ type Client struct {
 	Conf  Conf
 	DB    *gorm.DB
 	Minio *minio.Client
+	ID string
 }
 
 func New(conf Conf) (c *Client, err error) {
@@ -33,12 +34,23 @@ func New(conf Conf) (c *Client, err error) {
 		return
 	}
 
+	// TODO: use uuid
+	c.ID = "test"
+
 	return
 }
 
 func (c *Client) StartOrDie() (err error) {
 	glog.Info("Starting runner")
-	// TODO
+	d := time.Duration(time.Second * c.Conf.HeartbeatSeconds)
+	t := time.NewTicker(d)
+    defer t.Stop()
+
+    for {
+            <- t.C
+			c.hearbeat()
+			c.listen()
+    }
 	return
 }
 
@@ -46,5 +58,17 @@ func (c *Client) Free() {
 	if err := c.DB.Close(); err != nil {
 		glog.Warning(err)
 	}
+	return
+}
+
+func (c *Client) heartbeat() (err error) {
+	glog.Infof("runner[%s] heartbeat", c.ID)
+	// TODO: collect machine info call rpc hearbeat
+	return
+}
+
+func (c *Client) listen() (err error) {
+	glog.Infof("runner[%s] listen job from redis", c.ID)
+	// TODO: listen redis status and excute actions
 	return
 }

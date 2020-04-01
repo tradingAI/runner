@@ -14,6 +14,7 @@ type Conf struct {
 	DB         pg.DBConf
 	StorageDir string
 	Minio      minio.MinioConf
+	HeartbeatSeconds int
 }
 
 // LoadConf load config from env
@@ -58,6 +59,7 @@ func LoadConf() (conf Conf, err error) {
 			Port:      minioPort,
 			Secure:    minioSecure,
 		},
+		HeartbeatSeconds: os.Getenv("HEARTBEAT_SECONDS"),
 	}
 
 	if err = conf.Validate(); err != nil {
