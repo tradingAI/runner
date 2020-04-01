@@ -42,6 +42,13 @@ func LoadConf() (conf Conf, err error) {
 		glog.Error(err)
 		return
 	}
+
+	heartbeatSeconds,  err := strconv.Atoi(os.Getenv("HEARTBEAT_SECONDS"))
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+
 	conf = Conf{
 		DB: pg.DBConf{
 			Database:     os.Getenv("TWEB_POSTGRES_DB"),
@@ -59,7 +66,7 @@ func LoadConf() (conf Conf, err error) {
 			Port:      minioPort,
 			Secure:    minioSecure,
 		},
-		HeartbeatSeconds: strconv.Atoi(os.Getenv("HEARTBEAT_SECONDS")),
+		HeartbeatSeconds: heartbeatSeconds,
 	}
 
 	if err = conf.Validate(); err != nil {
