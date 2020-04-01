@@ -1,4 +1,5 @@
-![CI](https://github.com/tradingAI/runner/workflows/CI/badge.svg)
+![Test](https://github.com/tradingAI/runner/workflows/Test/badge.svg)
+![Docker](https://github.com/tradingAI/runner/workflows/Docker/badge.svg)
 # runner
 Job runner
 
