@@ -44,8 +44,7 @@ func New(conf Conf) (c *Client, err error) {
 
 func (c *Client) StartOrDie() (err error) {
 	glog.Info("Starting runner")
-	d := time.Duration(time.Second * c.Conf.HeartbeatSeconds)
-	t := time.NewTicker(d)
+	t := time.NewTicker(c.Conf.HeartbeatSeconds * time.Second)
     defer t.Stop()
 
     for {
