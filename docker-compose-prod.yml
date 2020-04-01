@@ -25,6 +25,7 @@ services:
     command: ["server", "/data"]
   runner:
     image: registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
+    imagePullPolicy: always
     container_name: runner_client
     environment:
       TUSHARE_TOKEN: ${TUSHARE_TOKEN}

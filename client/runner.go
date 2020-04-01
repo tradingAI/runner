@@ -37,7 +37,7 @@ func New(conf Conf) (c *Client, err error) {
 	}
 
 	// TODO: use uuid
-	c.ID = "test"
+	c.ID = "test_runner_id"
 
 	return
 }
