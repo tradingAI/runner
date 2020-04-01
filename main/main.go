@@ -18,7 +18,7 @@ func runClient() {
 	}
 
 	// new client
-	c, err := client.New(conf, frontend)
+	c, err := client.New(conf)
 	if err != nil {
 		glog.Fatal(err)
 	}
