@@ -24,6 +24,7 @@ jobs:
         TWEB_MINIO_HOST: ${{ secrets.TWEB_MINIO_HOST }}
         TWEB_MINIO_PORT: ${{ secrets.TWEB_MINIO_PORT }}
         TWEB_MINIO_SECURE: ${{ secrets.TWEB_MINIO_SECURE }}
+        HEARTBEAT_SECONDS: ${{ secrets.HEARTBEAT_SECONDS }}
 
       run: |
         sudo mkdir -p $BAZEL_USER_ROOT

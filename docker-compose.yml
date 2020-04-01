@@ -46,9 +46,10 @@ services:
       TWEB_MINIO_HOST: ${TWEB_MINIO_HOST}
       TWEB_MINIO_PORT: ${TWEB_MINIO_PORT}
       TWEB_MINIO_SECURE: ${TWEB_MINIO_SECURE}
+      HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
     depends_on:
       - grandet_db
-      - minio  
+      - minio
     restart: always
     volumes:
       - .:/go/src/github.com/tradingAI/runner
