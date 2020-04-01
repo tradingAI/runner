@@ -50,7 +50,7 @@ func (c *Client) StartOrDie() (err error) {
 
     for {
             <- t.C
-			c.Hearbeat()
+			c.Heartbeat()
 			c.Listen()
     }
 	return
