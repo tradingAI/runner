@@ -1,8 +1,8 @@
-name: Build
+name: Docker
 
 on:
   push:
-    branches: [ build ]
+    branches: [ master ]
 
 jobs:
   test:
