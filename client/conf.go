@@ -31,7 +31,7 @@ func LoadConf() (conf Conf, err error) {
 		return
 	}
 
-	minioPort, err := strconv.Atoi(os.Getenv("SCHEDULER_MINIO_PORT"))
+	minioPort, err := strconv.Atoi(os.Getenv("TWEB_MINIO_PORT"))
 	if err != nil {
 		glog.Error(err)
 		return
