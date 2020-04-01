@@ -14,7 +14,7 @@ type Client struct {
 	Minio *minio.Client
 }
 
-func New(conf Conf) (s *Client, err error) {
+func New(conf Conf) (c *Client, err error) {
 	// make server
 	c = &Client{
 		Conf: conf,
