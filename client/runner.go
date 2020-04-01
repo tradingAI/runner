@@ -27,7 +27,7 @@ func New(conf Conf) (c *Client, err error) {
 		return
 	}
 
-	c.Minio, err = minio2.NewMinioClient(s.Conf.Minio)
+	c.Minio, err = minio2.NewMinioClient(c.Conf.Minio)
 	if err != nil {
 		glog.Error(err)
 		return
