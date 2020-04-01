@@ -30,6 +30,12 @@ func LoadConf() (conf Conf, err error) {
 		return
 	}
 
+	minioPort, err := strconv.Atoi(os.Getenv("SCHEDULER_MINIO_PORT"))
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+
 	minioSecure, err := strconv.ParseBool(os.Getenv("TWEB_MINIO_SECURE"))
 	if err != nil {
 		glog.Error(err)
@@ -42,7 +48,6 @@ func LoadConf() (conf Conf, err error) {
 			Password:     os.Getenv("TWEB_POSTGRES_PASSWORD"),
 			Port:         dbPort,
 			Host:         os.Getenv("TWEB_POSTGRES_HOST"),
-			Reset:        dbReset,
 			ReconnectSec: time.Duration(dbReconnectSec) * time.Second,
 		},
 		StorageDir: os.Getenv("TWEB_STORAGE_DIR"),
