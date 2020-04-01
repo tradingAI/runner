@@ -2,7 +2,7 @@ package client
 
 import (
 	"time"
-	
+
 	"github.com/golang/glog"
 	"github.com/jinzhu/gorm"
 	"github.com/minio/minio-go/v6"
@@ -50,8 +50,8 @@ func (c *Client) StartOrDie() (err error) {
 
     for {
             <- t.C
-			c.hearbeat()
-			c.listen()
+			c.Hearbeat()
+			c.Listen()
     }
 	return
 }
@@ -63,13 +63,13 @@ func (c *Client) Free() {
 	return
 }
 
-func (c *Client) heartbeat() (err error) {
+func (c *Client) Heartbeat() (err error) {
 	glog.Infof("runner[%s] heartbeat", c.ID)
 	// TODO: collect machine info call rpc hearbeat
 	return
 }
 
-func (c *Client) listen() (err error) {
+func (c *Client) Listen() (err error) {
 	glog.Infof("runner[%s] listen job from redis", c.ID)
 	// TODO: listen redis status and excute actions
 	return
