@@ -3,6 +3,9 @@ version: '3'
 services:
   bazel:
     image: tradingai/bazel:latest
+    depends_on:
+      - grandet_db
+      - minio    
     command:
       /bin/bash /go/src/github.com/tradingAI/runner/docker-compose.sh
     volumes:
@@ -46,9 +49,7 @@ services:
       TWEB_MINIO_HOST: ${TWEB_MINIO_HOST}
       TWEB_MINIO_PORT: ${TWEB_MINIO_PORT}
       TWEB_MINIO_SECURE: ${TWEB_MINIO_SECURE}
-    depends_on:
-      - grandet_db
-      - minio
+
     restart: always
     volumes:
-      - ./:/go/src/github.com/tradingAI/runner
+      - .:/go/src/github.com/tradingAI/runner
