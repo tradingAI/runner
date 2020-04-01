@@ -1,3 +1,4 @@
+![CI](https://github.com/tradingAI/runner/workflows/CI/badge.svg)
 # runner
 Job runner
 
