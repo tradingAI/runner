@@ -3,6 +3,7 @@ package client
 import (
 	"github.com/golang/glog"
 	"github.com/jinzhu/gorm"
+	"github.com/minio/minio-go/v6"
 	pg "github.com/tradingAI/go/db/postgres"
 	minio2 "github.com/tradingAI/go/s3/minio"
 )
@@ -10,7 +11,7 @@ import (
 type Client struct {
 	Conf  Conf
 	DB    *gorm.DB
-	Minio *minio2.Client
+	Minio *minio.Client
 }
 
 func New(conf Conf) (s *Client, err error) {
