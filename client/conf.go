@@ -59,7 +59,7 @@ func LoadConf() (conf Conf, err error) {
 			Port:      minioPort,
 			Secure:    minioSecure,
 		},
-		HeartbeatSeconds: os.Getenv("HEARTBEAT_SECONDS"),
+		HeartbeatSeconds: strconv.Atoi(os.Getenv("HEARTBEAT_SECONDS")),
 	}
 
 	if err = conf.Validate(); err != nil {
