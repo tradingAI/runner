@@ -37,7 +37,8 @@ func New(conf Conf) (c *Client, err error) {
 }
 
 func (c *Client) StartOrDie() (err error) {
-	glog.Info("Hello world")
+	glog.Info("Starting runner")
+	// TODO
 	return
 }
 
