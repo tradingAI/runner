@@ -10,7 +10,7 @@ import (
 type Client struct {
 	Conf  Conf
 	DB    *gorm.DB
-	Minio *minio.Client
+	Minio *minio2.Client
 }
 
 func New(conf Conf) (s *Client, err error) {
