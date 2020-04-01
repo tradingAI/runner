@@ -1,28 +1,28 @@
 # https://github.com/tradingAI/docker/blob/master/bazel.Dockerfile
-FROM tradingai/bazel:latest
+FROM tradingai/bazel:latest as build
 
-ENV CODE_DIR /root/github.com/
+ENV PROJECT_PATH=${ROOT}/runner
 
-ARG BUILD_TIME
-ENV BUILD_TIME=${BUILD_TIME}
+COPY main ${PROJECT_PATH}/main
+COPY client ${PROJECT_PATH}/client
+COPY Makefile ${PROJECT_PATH}/Makefile
+COPY proto.sh ${PROJECT_PATH}/proto.sh
+COPY go.mod ${PROJECT_PATH}/go.mod
+COPY go.sum ${PROJECT_PATH}/go.sum
 
-# install tenvs
-WORKDIR  $CODE_DIR
-RUN cd $CODE_DIR && rm -rf tenvs
-RUN git clone https://github.com/tradingAI/tenvs.git
-# Clean up pycache and pyc files
-RUN cd $CODE_DIR/tenvs && rm -rf __pycache__ && \
-    find . -name "*.pyc" -delete && \
-    pip install -r requirements.txt && \
-    pip install -e .
+WORKDIR ${ROOT}
+RUN git clone https://github.com/tradingAI/go.git && \
+    git clone https://github.com/tradingAI/proto.git
+WORKDIR ${PROJECT_PATH}
+RUN make build_linux
 
-RUN rm -rf /root/.cache/pip \
-    && find / -type d -name __pycache__ -exec rm -r {} \+
+# run-time image
+FROM alpine
 
-WORKDIR $CODE_DIR/tenvs
+Label maintainer="liuwen.w@qq.com"
 
-ARG TUSHARE_TOKEN
-ENV TUSHARE_TOKEN=${TUSHARE_TOKEN}
-RUN export TUSHARE_TOKEN=$TUSHARE_TOKEN
+ENV PROJECT_PATH=/go/src/github.com/tradingAI/runner
 
-CMD /bin/bash
+COPY --from=build ${PROJECT_PATH}/main/client /
+
+ENTRYPOINT ["/client"]
