@@ -67,3 +67,16 @@ func LoadConf() (conf Conf, err error) {
 
 	return
 }
+
+func (c *Conf) Validate() (err error) {
+	if err = c.DB.Validate(); err != nil {
+		glog.Info(err)
+		return
+	}
+
+	if err = c.Minio.Validate(); err != nil {
+		glog.Error(err)
+		return
+	}
+	return
+}
