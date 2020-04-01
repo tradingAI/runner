@@ -18,7 +18,7 @@ type Client struct {
 }
 
 func New(conf Conf) (c *Client, err error) {
-	// make server
+	// make client
 	c = &Client{
 		Conf: conf,
 	}

@@ -9,6 +9,9 @@ proto:
 run:
 	docker-compose -f docker-compose.yml up runner
 
+down:
+	docker-compose -f docker-compose.yml down
+
 test:
 	docker-compose -f docker-compose.yml up bazel
 
