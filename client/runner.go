@@ -1,6 +1,8 @@
 package client
 
 import (
+	"time"
+	
 	"github.com/golang/glog"
 	"github.com/jinzhu/gorm"
 	"github.com/minio/minio-go/v6"
