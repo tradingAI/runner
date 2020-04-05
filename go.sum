@@ -164,8 +164,8 @@ github.com/stretchr/testify v1.5.1 h1:nOGnQDM7FYENwehXlg/kFVnos3rEvtKTjRvOWSzb6H
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5/go.mod h1:ncp9v5uamzpCO7NfCPTXjqaC+bZgJeR0sMTm6dMHP7U=
 github.com/tradingAI/go v0.0.0-20200320075057-e810e5a7b406/go.mod h1:7xB/BzpFZLah/SN+Dpz5ZJPpZDf55Oy8jM+gxZ3YHPI=
-github.com/tradingAI/go v0.0.0-20200402182313-a208ebb4fa08 h1:95FLPHBIGm8mLnZOxWa8b8iMvTys96S9AUhR8JKCRJ8=
-github.com/tradingAI/go v0.0.0-20200402182313-a208ebb4fa08/go.mod h1:wrHlRerPZUr9cTZktZ78wHp9vxveYFeb3hbbif6YF4o=
+github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc h1:mgKREAV7f731S9b43+DEd3T7ignu5pnxH4iaYnNPSCY=
+github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc/go.mod h1:wrHlRerPZUr9cTZktZ78wHp9vxveYFeb3hbbif6YF4o=
 github.com/tradingAI/tweb v0.1.24/go.mod h1:0Fugfpp0EzHP7UjEWx4aWjQCZqhyyyneBtePyRRO9Ew=
 github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGrc=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=

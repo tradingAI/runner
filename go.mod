@@ -23,7 +23,7 @@ require (
 	github.com/minio/minio-go/v6 v6.0.52
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
-	github.com/tradingAI/go v0.0.0-20200402182313-a208ebb4fa08
+	github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000 // indirect
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000
 )

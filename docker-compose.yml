@@ -5,6 +5,8 @@ services:
     image: tradingai/bazel:latest
     command:
       /bin/bash /go/src/github.com/tradingAI/runner/docker-compose.sh
+    environment:
+        RUNNER_LOG_DIR: ${RUNNER_LOG_DIR}
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
   minio:
