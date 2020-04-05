@@ -8,7 +8,7 @@ update:
 	go mod tidy
 
 proto:
-	GO111MODULE=on bash proto.sh
+	bash proto.sh
 
 run:
 	docker-compose -f docker-compose.yml up runner
