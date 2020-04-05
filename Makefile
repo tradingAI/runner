@@ -17,7 +17,7 @@ down:
 	docker-compose -f docker-compose.yml down
 
 test:
-	docker-compose up bazel
+	docker-compose up test
 
 build_linux: proto
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 packr2 build -o client main/main.go

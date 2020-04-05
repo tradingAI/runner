@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  bazel:
+  test:
     image: tradingai/bazel:latest
     command:
       /bin/bash /go/src/github.com/tradingAI/runner/docker-compose.sh

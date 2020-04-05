@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Run test in docker container
-      run: docker-compose -f docker-compose.yml up --exit-code-from bazel bazel
+      run: docker-compose -f docker-compose.yml up --exit-code-from test test
       env:
         TWEB_POSTGRES_PORT: 5432
         TWEB_MINIO_PORT: 9000

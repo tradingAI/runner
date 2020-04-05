@@ -1,17 +1,6 @@
 version: '3'
 
 services:
-  grandet_db:
-    image: postgres:11.1
-    environment:
-      POSTGRES_PASSWORD: ${TWEB_POSTGRES_PASSWORD}
-      POSTGRES_USER: ${TWEB_POSTGRES_USER}
-      POSTGRES_DB: ${TWEB_POSTGRES_DB}
-    container_name: tweb_db
-    ports:
-      - ${TWEB_POSTGRES_PORT}:5432
-    volumes:
-      - /tmp/tweb_db/pgdata:/var/lib/postgresql/data
   minio:
     image: minio/minio:latest
     ports:

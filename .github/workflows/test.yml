@@ -21,7 +21,4 @@ jobs:
         HEARTBEAT_SECONDS: ${{ secrets.HEARTBEAT_SECONDS }}
         RUNNER_LOG_DIR: $${{ secrets.RUNNER_LOG_DIR }}
 
-      run: |
-        sudo mkdir -p $BAZEL_USER_ROOT
-        sudo mkdir -p $OUTPUT_DIR
-        docker-compose up --exit-code-from bazel bazel
+      run: docker-compose up --exit-code-from test test
