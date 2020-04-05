@@ -26,5 +26,6 @@ services:
       TWEB_MINIO_SECURE: ${TWEB_MINIO_SECURE}
       TWEB_CROS_ALLOW_ORIGINS: http://localhost:3030
       HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
-      RUNNER_LOG_DIR: ${RUNNER_LOG_DIR}
+      JOB_LOG_DIR: ${JOB_LOG_DIR}
+      JOB_SHELL_DIR: ${JOB_SHELL_DIR}
     restart: always

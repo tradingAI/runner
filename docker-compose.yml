@@ -6,7 +6,8 @@ services:
     command:
       /bin/bash /go/src/github.com/tradingAI/runner/docker-compose.sh
     environment:
-        RUNNER_LOG_DIR: ${RUNNER_LOG_DIR}
+        JOB_LOG_DIR: ${JOB_LOG_DIR}
+        JOB_SHELL_DIR: ${JOB_SHELL_DIR}
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
   minio:
@@ -32,7 +33,8 @@ services:
       TWEB_MINIO_PORT: ${TWEB_MINIO_PORT}
       TWEB_MINIO_SECURE: ${TWEB_MINIO_SECURE}
       HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
-      RUNNER_LOG_DIR: ${RUNNER_LOG_DIR}
+      JOB_LOG_DIR: ${JOB_LOG_DIR}
+      JOB_SHELL_DIR: ${JOB_SHELL_DIR}
     depends_on:
       - minio
     restart: always

@@ -19,6 +19,8 @@ jobs:
         TWEB_MINIO_PORT: ${{ secrets.TWEB_MINIO_PORT }}
         TWEB_MINIO_SECURE: ${{ secrets.TWEB_MINIO_SECURE }}
         HEARTBEAT_SECONDS: ${{ secrets.HEARTBEAT_SECONDS }}
-        RUNNER_LOG_DIR: $${{ secrets.RUNNER_LOG_DIR }}
+        JOB_LOG_DIR: $${{ secrets.JOB_LOG_DIR }}
+        JOB_SHELL_DIR: $${{ secrets.JOB_SHELL_DIR}}
+
 
       run: docker-compose up --exit-code-from test test
