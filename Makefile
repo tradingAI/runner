@@ -1,10 +1,11 @@
 .PHONY: proto build_linux build_darwin clean
 
 install:
-	GO111MODULE=on go mod init && GO111MODULE=on go mod tidy
+	GO111MODULE=on go mod init
+	GO111MODULE=on go mod tidy
 
 proto:
-	bash proto.sh
+	GO111MODULE=on bash proto.sh
 
 run:
 	docker-compose -f docker-compose.yml up runner
