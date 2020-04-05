@@ -4,3 +4,8 @@
 Job runner
 
 **[Design](https://github.com/tradingAI/scheduler/blob/doc/docs/README.md)**
+
+## 快速开始
+- golang 1.13+
+- export GO111MODULE=on
+- make intall

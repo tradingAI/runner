@@ -1,7 +1,10 @@
-.PHONY: proto build_linux build_darwin clean
+.PHONY: install update proto run down test build_linux build_darwin clean
 
 install:
-	# go mod init
+	go mod init
+	go mod tidy
+
+update:
 	go mod tidy
 
 proto:

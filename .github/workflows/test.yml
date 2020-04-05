@@ -13,18 +13,13 @@ jobs:
         BAZEL_USER_ROOT: /home/runner/BAZEL_USER_ROOT
         OUTPUT_DIR: /home/runner/OUTPUT_DIR
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-        TWEB_POSTGRES_HOST: ${{ secrets.TWEB_POSTGRES_HOST }}
-        TWEB_POSTGRES_PORT: ${{ secrets.TWEB_POSTGRES_PORT }}
-        TWEB_POSTGRES_RECONNECT_SEC: ${{ secrets.TWEB_POSTGRES_RECONNECT_SEC }}
-        TWEB_POSTGRES_PASSWORD: ${{ secrets.TWEB_POSTGRES_PASSWORD }}
-        TWEB_POSTGRES_USER: ${{ secrets.TWEB_POSTGRES_USER }}
-        TWEB_POSTGRES_DB: ${{ secrets.TWEB_POSTGRES_DB }}
         TWEB_MINIO_ACCESS_KEY: ${{ secrets.TWEB_MINIO_ACCESS_KEY }}
         TWEB_MINIO_SECRET_KEY: ${{ secrets.TWEB_MINIO_SECRET_KEY }}
         TWEB_MINIO_HOST: ${{ secrets.TWEB_MINIO_HOST }}
         TWEB_MINIO_PORT: ${{ secrets.TWEB_MINIO_PORT }}
         TWEB_MINIO_SECURE: ${{ secrets.TWEB_MINIO_SECURE }}
         HEARTBEAT_SECONDS: ${{ secrets.HEARTBEAT_SECONDS }}
+        RUNNER_LOG_DIR: $${{ secrets.RUNNER_LOG_DIR }}
 
       run: |
         sudo mkdir -p $BAZEL_USER_ROOT

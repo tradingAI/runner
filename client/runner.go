@@ -4,30 +4,30 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"github.com/jinzhu/gorm"
 	"github.com/minio/minio-go/v6"
-	pg "github.com/tradingAI/go/db/postgres"
 	minio2 "github.com/tradingAI/go/s3/minio"
+	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
+
+type Container struct{
+    Name string
+    ID string
+    ShortID string
+    Job *pb.Job
+}
 
 type Client struct {
 	Conf  Conf
-	DB    *gorm.DB
 	Minio *minio.Client
 	ID string
+	// key: jobID, value: Container
+	Containers map[uint64]Container
 }
 
 func New(conf Conf) (c *Client, err error) {
 	// make client
 	c = &Client{
 		Conf: conf,
-	}
-
-	// Init db
-	c.DB, err = pg.NewPostgreSQL(conf.DB)
-	if err != nil {
-		glog.Error(err)
-		return
 	}
 
 	c.Minio, err = minio2.NewMinioClient(c.Conf.Minio)
@@ -38,6 +38,8 @@ func New(conf Conf) (c *Client, err error) {
 
 	// TODO: use uuid
 	c.ID = "test_runner_id"
+
+	c.Containers = make(map[uint64]Container)
 
 	return
 }
@@ -59,9 +61,6 @@ func (c *Client) StartOrDie() (err error) {
 }
 
 func (c *Client) Free() {
-	if err := c.DB.Close(); err != nil {
-		glog.Warning(err)
-	}
 	return
 }
 
@@ -71,8 +70,39 @@ func (c *Client) Heartbeat() (err error) {
 	return
 }
 
+func (c *Client)  getCreateJobFromRedis()(job *pb.Job, err error){
+	// TODO
+	job = &pb.Job{
+		Id: uint64(123456789),
+		RunnerId: c.ID,
+		Type: pb.JobType_TRAIN,
+	}
+	return job, nil
+}
+
+func (c *Client)  getStopJobFromRedis()(job *pb.Job, err error){
+	// TODO
+	job = &pb.Job{
+		Id: uint64(123456789),
+		RunnerId: c.ID,
+		Type: pb.JobType_TRAIN,
+	}
+	return job, nil
+}
+
 func (c *Client) Listen() (err error) {
 	glog.Infof("runner[%s] listen job from redis", c.ID)
 	// TODO: listen redis status and excute actions
+	// create
+	createJob, _ := c.getCreateJobFromRedis()
+	if createJob != nil {
+		c.CreateJob(createJob)
+	}
+	// stop
+	stopJob, _ := c.getStopJobFromRedis()
+	if stopJob != nil {
+		c.StopJob(stopJob.Id)
+		c.RemoveContainer(stopJob.Id)
+	}
 	return
 }

@@ -20,10 +20,10 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
-	github.com/jinzhu/gorm v1.9.12
 	github.com/minio/minio-go/v6 v6.0.52
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
-	github.com/stretchr/testify v1.5.1
 	github.com/tradingAI/go v0.0.0-20200402182313-a208ebb4fa08
+	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000 // indirect
+	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000
 )
