@@ -26,4 +26,5 @@ require (
 	github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000 // indirect
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000
+	google.golang.com/grpc v1.27.0
 )
