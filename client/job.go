@@ -12,7 +12,6 @@ import (
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
-
 func (c *Client) CreateJob(job *pb.Job) (err error) {
 	glog.Infof("runner %s creating job %d", c.ID, job.Id)
 	ctx := context.Background()
@@ -26,11 +25,11 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	logFilePath := c.createLogFile(jobIdStr)
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image: 		  DEFAULT_IMAGE,
-		Cmd:   		  c.getCmd(TARGET_SHELL_PATH),
+		Image:        DEFAULT_IMAGE,
+		Cmd:          c.getCmd(TARGET_SHELL_PATH),
 		Tty:          true,
 		AttachStdout: true,
-        AttachStderr: true,
+		AttachStderr: true,
 	}, &container.HostConfig{
 		Mounts: []mount.Mount{
 			{
@@ -58,31 +57,20 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	}
 
 	// stream read container log and write into file
-	ch := make(chan int)
-	go func(id string, logFilePath string, done chan int){
-		for {
-			select {
-			case <- done:
-				glog.Info("ContainerWait statusCh")
-				done <- 1
-				return
-			default:
-			}
-			writeLog(id, logFilePath)
-		}
-	}(resp.ID, logFilePath, ch)
+	go writeLog(resp.ID, logFilePath)
 
+	ch := make(chan int)
 	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
 	select {
-		case err := <-errCh:
-			if err != nil {
-				panic(err)
-			}
-		case <-statusCh:
-			glog.Infof("runner %s completed job %d, container id: %s", c.ID, job.Id, resp.ID)
-			ch <- 1
+	case err := <-errCh:
+		if err != nil {
+			panic(err)
+		}
+	case <-statusCh:
+		glog.Infof("runner %s completed job %d, container id: %s", c.ID, job.Id, resp.ID)
+		ch <- 1
 	}
-	<- ch
+	<-ch
 	return
 }
 

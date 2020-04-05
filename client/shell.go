@@ -29,13 +29,14 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 		return
 	}
 	// TODO: write cmds
-	for i := 0; i < 5; i++ {
+	f.Write([]byte("echo " + strings.Repeat("==", 40) + "\n"))
+	for i := 0; i < 10; i++ {
 		f.Write([]byte("echo " + strconv.Itoa(i) + "\n"))
-		f.Write([]byte("echo " + strings.Repeat("==", i + 1) + "\n"))
-		f.Write([]byte("echo e0c9c5f46691bfaf437106f0e2d04da026978456a7cf86efeaf4c96d1f706324\n"))
-		f.Write([]byte("sleep 2s\n"))
+		f.Write([]byte("echo " + strings.Repeat("====", i + 1) + "\n"))
+		f.Write([]byte("sleep 1s\n"))
 		f.Write([]byte("date\n"))
 	}
+
 	f.Close()
 	return
 }

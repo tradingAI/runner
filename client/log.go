@@ -1,12 +1,10 @@
 package client
 
 import (
-	// "bytes"
 	"context"
-	"io"
 	"os"
 	"path"
-	"time"
+	"bufio"
 
 	"docker.io/go-docker"
 	"docker.io/go-docker/api/types"
@@ -37,26 +35,39 @@ func writeLog(container_id string, filePath string) (err error) {
 	if err != nil {
 		panic(err)
 	}
-	out, err := cli.ContainerLogs(ctx, container_id, types.ContainerLogsOptions{ShowStdout: true})
+
+	reader, err := cli.ContainerLogs(ctx, container_id, types.ContainerLogsOptions{
+		ShowStdout: true,
+		ShowStderr: true,
+		Follow:     true,
+		Timestamps: false,
+	})
 	if err != nil {
 		panic(err)
 	}
+	defer func() {
+		if errClose := reader.Close(); errClose != nil {
+			panic(errClose)
+		}
+	}()
 
 	f, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, 0644)
+	defer f.Close()
 	if err != nil {
 		glog.Fatal(err)
 		return
 	}
-	buf := make([]byte, 8)
-	for {
-		n, err := out.Read(buf)
-		if err == io.EOF {
-			time.Sleep(1 * time.Second)
+
+	scanner := bufio.NewScanner(reader)
+	for scanner.Scan() {
+		_, err = f.Write([]byte(scanner.Text() + "\n"))
+		if err != nil {
 			break
 		}
-		outString := string(buf[:n])
-		f.Write([]byte(outString))
 	}
-	f.Close()
+	if err != nil {
+		panic(err)
+	}
+
 	return
 }

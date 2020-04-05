@@ -21,6 +21,7 @@ type Client struct {
 	Minio *minio.Client
 	ID string
 	// key: jobID, value: Container
+	Token string
 	Containers map[uint64]Container
 }
 
@@ -36,8 +37,9 @@ func New(conf Conf) (c *Client, err error) {
 		return
 	}
 
-	// TODO: use uuid
+	// TODO: use uuid token
 	c.ID = "test_runner_id"
+	c.Token = "test_token"
 
 	c.Containers = make(map[uint64]Container)
 
@@ -46,8 +48,8 @@ func New(conf Conf) (c *Client, err error) {
 
 func (c *Client) StartOrDie() (err error) {
 	glog.Info("Starting runner")
-	// c.Heartbeat()
-	// c.Listen()
+	c.Heartbeat()
+	c.Listen()
 	d := time.Duration(int64(time.Second) * int64(c.Conf.HeartbeatSeconds))
 	t := time.NewTicker(d)
     defer t.Stop()
@@ -102,7 +104,7 @@ func (c *Client) Listen() (err error) {
 	}
 
 	glog.Infof("runner[%s] sleepping 50 seconds", c.ID)
-	time.Sleep(10 * time.Second)
+	time.Sleep(7 * time.Second)
 	// stop
 	stopJob, _ := c.getStopJobFromRedis()
 	if stopJob != nil {
