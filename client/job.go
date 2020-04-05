@@ -9,6 +9,7 @@ import (
 	"docker.io/go-docker"
 	"docker.io/go-docker/api/types"
 	"docker.io/go-docker/api/types/container"
+	"docker.io/go-docker/api/types/mount"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
@@ -19,7 +20,7 @@ const DEFAULT_IMAGE = "alpine"
 
 func getCmd(job *pb.Job) (cmd []string, err error) {
 	// TODO
-	return []string{"echo", "hello world"}, nil
+	return []string{"sh", "/root/test.sh"}, nil
 }
 
 func writeLog(id string)(err error){
@@ -52,11 +53,20 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	if err != nil{
 		panic(err)
 	}
+
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: DEFAULT_IMAGE,
 		Cmd:   cmd,
 		Tty:   true,
-	}, nil, nil, container_name)
+	}, &container.HostConfig{
+        Mounts: []mount.Mount{
+            {
+                Type:   mount.TypeBind,
+                Source: "/Users/liuwen/Google/liulishuo/workspace/go/gopath/src/github.com/tradingAI/runner/test.sh",
+                Target: "/root/test.sh",
+            },
+        },
+    }, nil, container_name)
 	if err != nil {
 		panic(err)
 	}
