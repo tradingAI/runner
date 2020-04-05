@@ -1,8 +1,8 @@
 .PHONY: proto build_linux build_darwin clean
 
 install:
-	# GO111MODULE=on go mod init
-	GO111MODULE=on go mod tidy
+	# go mod init
+	go mod tidy
 
 proto:
 	GO111MODULE=on bash proto.sh

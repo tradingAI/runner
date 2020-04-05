@@ -9,13 +9,11 @@ import (
 )
 
 func main() {
-	fmt.Printf("NewEnvClient\n")
 	cli, err := docker.NewEnvClient()
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("ContainerList\n")
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{})
 	if err != nil {
 		panic(err)
