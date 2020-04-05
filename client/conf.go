@@ -18,13 +18,13 @@ type Conf struct {
 
 // LoadConf load config from env
 func LoadConf() (conf Conf, err error) {
-	minioPort, err := strconv.Atoi(os.Getenv("TWEB_MINIO_PORT"))
+	minioPort, err := strconv.Atoi(os.Getenv("RUNNER_MINIO_PORT"))
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 
-	minioSecure, err := strconv.ParseBool(os.Getenv("TWEB_MINIO_SECURE"))
+	minioSecure, err := strconv.ParseBool(os.Getenv("RUNNER_MINIO_SECURE"))
 	if err != nil {
 		glog.Error(err)
 		return
@@ -39,9 +39,9 @@ func LoadConf() (conf Conf, err error) {
 	conf = Conf{
 		StorageDir: os.Getenv("TWEB_STORAGE_DIR"),
 		Minio: minio.MinioConf{
-			AccessKey: os.Getenv("TWEB_MINIO_ACCESS_KEY"),
-			SecretKey: os.Getenv("TWEB_MINIO_SECRET_KEY"),
-			Host:      os.Getenv("TWEB_MINIO_HOST"),
+			AccessKey: os.Getenv("RUNNER_MINIO_ACCESS_KEY"),
+			SecretKey: os.Getenv("RUNNER_MINIO_SECRET_KEY"),
+			Host:      os.Getenv("RUNNER_MINIO_HOST"),
 			Port:      minioPort,
 			Secure:    minioSecure,
 		},
