@@ -23,6 +23,8 @@ require (
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/gordonklaus/ineffassign v0.0.0-20200309095847-7953dde2c7bf // indirect
+	github.com/jgautheron/goconst v0.0.0-20200227150835-cda7ea3bf591 // indirect
+	github.com/mdempsky/maligned v0.0.0-20180708014732-6e39bd26a8c8 // indirect
 	github.com/mibk/dupl v1.0.0 // indirect
 	github.com/minio/minio-go/v6 v6.0.52
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect

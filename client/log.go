@@ -15,7 +15,7 @@ func (c *Client) createLogFile(id string) (logFilePath string) {
 	if _, err := os.Stat(c.Conf.JobLogDir); os.IsNotExist(err) {
 		err = os.MkdirAll(c.Conf.JobLogDir, 0755)
 		if err != nil {
-			panic(err)
+			glog.Error(err)
 		}
 	}
 	logFileName := id + ".log"
@@ -29,25 +29,25 @@ func (c *Client) createLogFile(id string) (logFilePath string) {
 	return
 }
 
-func writeLog(container_id string, filePath string) (err error) {
+func writeLog(containerId string, filePath string) (err error) {
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 
-	reader, err := cli.ContainerLogs(ctx, container_id, types.ContainerLogsOptions{
+	reader, err := cli.ContainerLogs(ctx, containerId, types.ContainerLogsOptions{
 		ShowStdout: true,
 		ShowStderr: true,
 		Follow:     true,
 		Timestamps: false,
 	})
 	if err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 	defer func() {
 		if errClose := reader.Close(); errClose != nil {
-			panic(errClose)
+			glog.Error(errClose)
 		}
 	}()
 
@@ -66,7 +66,7 @@ func writeLog(container_id string, filePath string) (err error) {
 		}
 	}
 	if err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 
 	return

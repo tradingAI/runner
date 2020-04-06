@@ -17,7 +17,7 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 
 	shellFilePath := c.createShellFile(job)
@@ -40,13 +40,13 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 		},
 	}, nil, jobIdStr)
 	if err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 
 	glog.Infof("runner %s created job %d, container id: %s", c.ID, job.Id, resp.ID)
 
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 
 	c.Containers[job.Id] = Container{
@@ -64,7 +64,7 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	select {
 	case err := <-errCh:
 		if err != nil {
-			panic(err)
+			glog.Error(err)
 		}
 	case <-statusCh:
 		glog.Infof("runner %s completed job %d, container id: %s", c.ID, job.Id, resp.ID)
@@ -78,12 +78,12 @@ func (c *Client) StopJob(id uint64) (err error) {
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 	container_id := c.Containers[id].ShortID
 	glog.Infof("runner %s stopping job %d, container id: %s", c.ID, id, container_id)
 	if err := cli.ContainerStop(ctx, container_id, nil); err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 	glog.Infof("runner %s stopped job %d, container id: %s", c.ID, id, container_id)
 	return
@@ -93,13 +93,13 @@ func (c *Client) RemoveContainer(id uint64) (err error) {
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 	// remove container
 	container_id := c.Containers[id].ShortID
 	glog.Infof("runner %s removing container id: %s, job id %d", c.ID, container_id, id)
 	if err := cli.ContainerRemove(ctx, container_id, types.ContainerRemoveOptions{}); err != nil {
-		panic(err)
+		glog.Error(err)
 	}
 	glog.Infof("runner %s removed container id: %s, job %d", c.ID, container_id, id)
 	return

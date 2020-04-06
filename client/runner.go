@@ -101,8 +101,7 @@ func (c *Client) Listen() (err error) {
 			c.CreateJob(createJob)
 		}(c)
 	}
-
-	glog.Infof("runner[%s] sleepping 50 seconds", c.ID)
+	// TODO: 删除sleep, 暂时用于本地测试用
 	time.Sleep(7 * time.Second)
 	// stop
 	stopJob, _ := c.getStopJobFromRedis()
