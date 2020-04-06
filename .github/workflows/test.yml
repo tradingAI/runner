@@ -13,20 +13,14 @@ jobs:
         BAZEL_USER_ROOT: /home/runner/BAZEL_USER_ROOT
         OUTPUT_DIR: /home/runner/OUTPUT_DIR
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-        TWEB_POSTGRES_HOST: ${{ secrets.TWEB_POSTGRES_HOST }}
-        TWEB_POSTGRES_PORT: ${{ secrets.TWEB_POSTGRES_PORT }}
-        TWEB_POSTGRES_RECONNECT_SEC: ${{ secrets.TWEB_POSTGRES_RECONNECT_SEC }}
-        TWEB_POSTGRES_PASSWORD: ${{ secrets.TWEB_POSTGRES_PASSWORD }}
-        TWEB_POSTGRES_USER: ${{ secrets.TWEB_POSTGRES_USER }}
-        TWEB_POSTGRES_DB: ${{ secrets.TWEB_POSTGRES_DB }}
-        TWEB_MINIO_ACCESS_KEY: ${{ secrets.TWEB_MINIO_ACCESS_KEY }}
-        TWEB_MINIO_SECRET_KEY: ${{ secrets.TWEB_MINIO_SECRET_KEY }}
-        TWEB_MINIO_HOST: ${{ secrets.TWEB_MINIO_HOST }}
-        TWEB_MINIO_PORT: ${{ secrets.TWEB_MINIO_PORT }}
-        TWEB_MINIO_SECURE: ${{ secrets.TWEB_MINIO_SECURE }}
+        RUNNER_MINIO_ACCESS_KEY: ${{ secrets.RUNNER_MINIO_ACCESS_KEY }}
+        RUNNER_MINIO_SECRET_KEY: ${{ secrets.RUNNER_MINIO_SECRET_KEY }}
+        RUNNER_MINIO_HOST: ${{ secrets.RUNNER_MINIO_HOST }}
+        RUNNER_MINIO_PORT: ${{ secrets.RUNNER_MINIO_PORT }}
+        RUNNER_MINIO_SECURE: ${{ secrets.RUNNER_MINIO_SECURE }}
         HEARTBEAT_SECONDS: ${{ secrets.HEARTBEAT_SECONDS }}
+        JOB_LOG_DIR: $${{ secrets.JOB_LOG_DIR }}
+        JOB_SHELL_DIR: $${{ secrets.JOB_SHELL_DIR}}
 
-      run: |
-        sudo mkdir -p $BAZEL_USER_ROOT
-        sudo mkdir -p $OUTPUT_DIR
-        docker-compose up --exit-code-from bazel bazel
+
+      run: docker-compose up --exit-code-from test test
