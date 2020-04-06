@@ -98,17 +98,26 @@ func (c *Client) Listen() (err error) {
 	createJob, _ := c.getCreateJobFromRedis()
 	if createJob != nil {
 		go func(c *Client) {
-			c.CreateJob(createJob)
+			err := c.CreateJob(createJob)
+			if err != nil{
+				glog.Error(err)
+			}
 		}(c)
 	}
 	// TODO: 删除sleep, 暂时用于本地测试用
-	time.Sleep(7 * time.Second)
+	time.Sleep(5 * time.Second)
 	// stop
 	stopJob, _ := c.getStopJobFromRedis()
 	if stopJob != nil {
 		go func(c *Client) {
-			c.StopJob(stopJob.Id)
-			c.RemoveContainer(stopJob.Id)
+			err := c.StopJob(stopJob.Id)
+			if err != nil{
+				glog.Error(err)
+			}
+			err = c.RemoveContainer(stopJob.Id)
+			if err != nil{
+				glog.Error(err)
+			}
 		}(c)
 	}
 	return

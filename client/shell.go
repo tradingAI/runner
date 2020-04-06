@@ -18,14 +18,14 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 	if _, err := os.Stat(c.Conf.JobShellDir); os.IsNotExist(err) {
 		err = os.MkdirAll(c.Conf.JobShellDir, 0755)
 		if err != nil {
-			panic(err)
+			glog.Error(err)
 		}
 	}
 	shellFileName := strconv.FormatUint(job.Id, 10) + ".sh"
 	shellFilePath = path.Join(c.Conf.JobShellDir, shellFileName)
 	f, err := os.OpenFile(shellFilePath, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	if err != nil {
-		glog.Fatal(err)
+		glog.Error(err)
 		return
 	}
 	// TODO: write cmds
