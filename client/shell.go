@@ -32,7 +32,7 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 	f.Write([]byte("echo " + strings.Repeat("==", 40) + "\n"))
 	for i := 0; i < 10; i++ {
 		f.Write([]byte("echo " + strconv.Itoa(i) + "\n"))
-		f.Write([]byte("echo " + strings.Repeat("====", i + 1) + "\n"))
+		f.Write([]byte("echo " + strings.Repeat("====", i+1) + "\n"))
 		f.Write([]byte("sleep 1s\n"))
 		f.Write([]byte("date\n"))
 	}

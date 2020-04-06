@@ -12,8 +12,8 @@ type Conf struct {
 	StorageDir       string
 	Minio            minio.MinioConf
 	HeartbeatSeconds int
-	JobLogDir 		 string
-	JobShellDir		 string
+	JobLogDir        string
+	JobShellDir      string
 }
 
 // LoadConf load config from env
@@ -46,8 +46,8 @@ func LoadConf() (conf Conf, err error) {
 			Secure:    minioSecure,
 		},
 		HeartbeatSeconds: heartbeatSeconds,
-		JobLogDir: os.Getenv("JOB_LOG_DIR"),
-		JobShellDir: os.Getenv("JOB_SHELL_DIR"),
+		JobLogDir:        os.Getenv("JOB_LOG_DIR"),
+		JobShellDir:      os.Getenv("JOB_SHELL_DIR"),
 	}
 
 	if err = conf.Validate(); err != nil {

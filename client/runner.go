@@ -9,20 +9,19 @@ import (
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
-type Container struct{
-    Name string
-    ID string
-    ShortID string
-    Job *pb.Job
+type Container struct {
+	Name    string
+	ID      string
+	ShortID string
+	Job     *pb.Job
 }
 
 type Client struct {
-	Conf  Conf
-	Minio *minio.Client
-	ID string
-	// key: jobID, value: Container
-	Token string
-	Containers map[uint64]Container
+	Conf       Conf
+	Minio      *minio.Client
+	ID         string
+	Token      string
+	Containers map[uint64]Container // key: jobID, value: Container
 }
 
 func New(conf Conf) (c *Client, err error) {
@@ -52,13 +51,13 @@ func (c *Client) StartOrDie() (err error) {
 	c.Listen()
 	d := time.Duration(int64(time.Second) * int64(c.Conf.HeartbeatSeconds))
 	t := time.NewTicker(d)
-    defer t.Stop()
+	defer t.Stop()
 
-    for {
-            <- t.C
-			c.Heartbeat()
-			c.Listen()
-    }
+	for {
+		<-t.C
+		c.Heartbeat()
+		c.Listen()
+	}
 	return
 }
 
@@ -72,22 +71,22 @@ func (c *Client) Heartbeat() (err error) {
 	return
 }
 
-func (c *Client)  getCreateJobFromRedis()(job *pb.Job, err error){
+func (c *Client) getCreateJobFromRedis() (job *pb.Job, err error) {
 	// TODO
 	job = &pb.Job{
-		Id: uint64(123456789),
+		Id:       uint64(123456789),
 		RunnerId: c.ID,
-		Type: pb.JobType_TRAIN,
+		Type:     pb.JobType_TRAIN,
 	}
 	return job, nil
 }
 
-func (c *Client)  getStopJobFromRedis()(job *pb.Job, err error){
+func (c *Client) getStopJobFromRedis() (job *pb.Job, err error) {
 	// TODO
 	job = &pb.Job{
-		Id: uint64(123456789),
+		Id:       uint64(123456789),
 		RunnerId: c.ID,
-		Type: pb.JobType_TRAIN,
+		Type:     pb.JobType_TRAIN,
 	}
 	return job, nil
 }

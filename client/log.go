@@ -1,10 +1,10 @@
 package client
 
 import (
+	"bufio"
 	"context"
 	"os"
 	"path"
-	"bufio"
 
 	"docker.io/go-docker"
 	"docker.io/go-docker/api/types"
