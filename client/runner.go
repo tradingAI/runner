@@ -29,6 +29,8 @@ func New(conf Conf) (c *Client, err error) {
 	// make client
 	c = &Client{
 		Conf: conf,
+		ID: "test_runner_id", // TODO: use uuid
+		Token: "test_token",  // TODO: use evn token
 	}
 
 	c.Minio, err = minio2.NewMinioClient(c.Conf.Minio)
@@ -36,10 +38,6 @@ func New(conf Conf) (c *Client, err error) {
 		glog.Error(err)
 		return
 	}
-
-	// TODO: use uuid token
-	c.ID = "test_runner_id"
-	c.Token = "test_token"
 
 	c.Containers = make(map[uint64]Container)
 
@@ -80,7 +78,7 @@ func (c *Client) getCreateJobFromRedis() (job *pb.Job, err error) {
 		Id:       uint64(123456789),
 		RunnerId: c.ID,
 		Type:     pb.JobType_TRAIN,
-		Input: 	  plugins.CreateTestTbaseTrainJobInput(),
+		Input:    plugins.CreateTestTbaseTrainJobInput(),
 	}
 	return job, nil
 }
@@ -103,7 +101,7 @@ func (c *Client) Listen() (err error) {
 	if createJob != nil {
 		go func(c *Client) {
 			err := c.CreateJob(createJob)
-			if err != nil{
+			if err != nil {
 				glog.Error(err)
 			}
 		}(c)
@@ -115,11 +113,11 @@ func (c *Client) Listen() (err error) {
 	if stopJob != nil {
 		go func(c *Client) {
 			err := c.StopJob(stopJob.Id)
-			if err != nil{
+			if err != nil {
 				glog.Error(err)
 			}
 			err = c.RemoveContainer(stopJob.Id)
-			if err != nil{
+			if err != nil {
 				glog.Error(err)
 			}
 		}(c)

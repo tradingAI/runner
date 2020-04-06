@@ -21,9 +21,9 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	}
 	// pull image
 	_, err = cli.ImagePull(ctx, DEFAULT_IMAGE, types.ImagePullOptions{})
-    if err != nil {
-        glog.Error(err)
-    }
+	if err != nil {
+		glog.Error(err)
+	}
 
 	shellFilePath := c.createShellFile(job)
 	jobIdStr := strconv.FormatUint(job.Id, 10)

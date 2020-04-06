@@ -3,8 +3,8 @@ package plugins
 import(
     pb "github.com/tradingAI/proto/gen/go/scheduler"
     "github.com/golang/glog"
-    "fmt"
     "strings"
+    "fmt"
 )
 
 type TbasePlugin struct {}

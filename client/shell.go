@@ -1,14 +1,14 @@
 package client
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"strconv"
-	"fmt"
 
 	"github.com/golang/glog"
-	plugins "github.com/tradingAI/runner/plugins"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
+	plugins "github.com/tradingAI/runner/plugins"
 )
 
 func (c *Client) getCmd(shellPath string) (cmd []string) {
