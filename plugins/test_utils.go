@@ -7,14 +7,14 @@ import(
 
 func CreateTestTbaseTrainJobInput() (input *pb.JobInput){
     tenvsURL := "https://github.com/tradingAI/tenvs"
-    tenvsTag := "v1.0.3"
+    tenvsTag := "v1.0.4"
     tenvsRepo := &mpb.InstallRepository{
         Repo: tenvsURL,
         Tag: tenvsTag,
         Cmds: GetTbaseInstallRepoCmds(tenvsURL, tenvsTag),
     }
     tbaseURL := "https://github.com/tradingAI/tbase"
-    tbaseTag := "v0.1.2"
+    tbaseTag := "v0.1.5"
     tbaseRepo := &mpb.InstallRepository{
         Repo: tbaseURL,
         Tag: tbaseTag,

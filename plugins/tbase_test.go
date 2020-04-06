@@ -8,12 +8,12 @@ import (
 
 func TestGetInstallTbaseRepoCmds(t *testing.T) {
 	tenvsURL := "https://github.com/tradingAI/tenvs"
-	tenvsTag := "v1.0.3"
+	tenvsTag := "v1.0.4"
 	actual := GetTbaseInstallRepoCmds(tenvsURL, tenvsTag)
 	expected := []string{
 		"git clone https://github.com/tradingAI/tenvs.git",
 		"cd tenvs",
-		"git checkout -b v1.0.3",
+		"git checkout -b v1.0.4",
 		"pip install -e .",
 	}
 	assert.Equal(t, expected, actual)
@@ -28,12 +28,12 @@ func TestGenerateCmds(t *testing.T) {
 		"cd /root/runner/",
 		"git clone https://github.com/tradingAI/tenvs.git",
 		"cd tenvs",
-		"git checkout -b v1.0.3",
+		"git checkout -b v1.0.4",
 		"pip install -e .",
 		"cd /root/runner/",
 		"git clone https://github.com/tradingAI/tbase.git",
 		"cd tbase",
-		"git checkout -b v0.1.2",
+		"git checkout -b v0.1.5",
 		"pip install -e .",
 		"python -m tbase.run --alg ddpg",
 	}

@@ -41,6 +41,9 @@ func New(conf Conf) (c *Client, err error) {
 
 	c.Containers = make(map[uint64]Container)
 
+	// TODO remove
+	c.Conf.HeartbeatSeconds = 1500
+
 	return
 }
 
@@ -57,7 +60,7 @@ func (c *Client) StartOrDie() (err error) {
 		c.Heartbeat()
 		c.Listen()
 		// TODO: remove return
-		return
+		time.Sleep(1 * time.Hour)
 	}
 	return
 }
@@ -85,12 +88,13 @@ func (c *Client) getCreateJobFromRedis() (job *pb.Job, err error) {
 
 func (c *Client) getStopJobFromRedis() (job *pb.Job, err error) {
 	// TODO
-	job = &pb.Job{
-		Id:       uint64(123456789),
-		RunnerId: c.ID,
-		Type:     pb.JobType_TRAIN,
-	}
-	return job, nil
+	// job = &pb.Job{
+	// 	Id:       uint64(123456789),
+	// 	RunnerId: c.ID,
+	// 	Type:     pb.JobType_TRAIN,
+	// }
+	// return job, nil
+	return nil, nil
 }
 
 func (c *Client) Listen() (err error) {
@@ -107,7 +111,7 @@ func (c *Client) Listen() (err error) {
 		}(c)
 	}
 	// TODO: 删除sleep, 暂时用于本地测试用
-	time.Sleep(25 * time.Second)
+	time.Sleep(15 * time.Second)
 	// stop
 	stopJob, _ := c.getStopJobFromRedis()
 	if stopJob != nil {

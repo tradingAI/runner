@@ -2,6 +2,8 @@ package client
 
 import (
 	"context"
+	"io"
+	"os"
 	"strconv"
 
 	"docker.io/go-docker"
@@ -20,10 +22,11 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 		glog.Error(err)
 	}
 	// pull image
-	_, err = cli.ImagePull(ctx, DEFAULT_IMAGE, types.ImagePullOptions{})
+	reader, err := cli.ImagePull(ctx, DEFAULT_IMAGE, types.ImagePullOptions{})
 	if err != nil {
 		glog.Error(err)
 	}
+	io.Copy(os.Stdout, reader)
 
 	shellFilePath := c.createShellFile(job)
 	jobIdStr := strconv.FormatUint(job.Id, 10)
