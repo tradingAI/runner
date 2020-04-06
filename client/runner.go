@@ -80,7 +80,7 @@ func (c *Client) getCreateJobFromRedis() (job *pb.Job, err error) {
 		Id:       uint64(123456789),
 		RunnerId: c.ID,
 		Type:     pb.JobType_TRAIN,
-
+		Input: 	  plugins.CreateTestTbaseTrainJobInput(),
 	}
 	return job, nil
 }
@@ -91,7 +91,6 @@ func (c *Client) getStopJobFromRedis() (job *pb.Job, err error) {
 		Id:       uint64(123456789),
 		RunnerId: c.ID,
 		Type:     pb.JobType_TRAIN,
-		Input: 	  plugins.CreateTestTbaseTrainJobInput(),
 	}
 	return job, nil
 }
