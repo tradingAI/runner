@@ -7,6 +7,7 @@ import (
 	"github.com/minio/minio-go/v6"
 	minio2 "github.com/tradingAI/go/s3/minio"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
+	"github.com/tradingAI/runner/plugins"
 )
 
 type Container struct {
@@ -57,6 +58,8 @@ func (c *Client) StartOrDie() (err error) {
 		<-t.C
 		c.Heartbeat()
 		c.Listen()
+		// TODO: remove return
+		return
 	}
 	return
 }
@@ -77,6 +80,7 @@ func (c *Client) getCreateJobFromRedis() (job *pb.Job, err error) {
 		Id:       uint64(123456789),
 		RunnerId: c.ID,
 		Type:     pb.JobType_TRAIN,
+
 	}
 	return job, nil
 }
@@ -87,6 +91,7 @@ func (c *Client) getStopJobFromRedis() (job *pb.Job, err error) {
 		Id:       uint64(123456789),
 		RunnerId: c.ID,
 		Type:     pb.JobType_TRAIN,
+		Input: 	  plugins.CreateTestTbaseTrainJobInput(),
 	}
 	return job, nil
 }
@@ -105,7 +110,7 @@ func (c *Client) Listen() (err error) {
 		}(c)
 	}
 	// TODO: 删除sleep, 暂时用于本地测试用
-	time.Sleep(5 * time.Second)
+	time.Sleep(25 * time.Second)
 	// stop
 	stopJob, _ := c.getStopJobFromRedis()
 	if stopJob != nil {

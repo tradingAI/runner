@@ -4,9 +4,21 @@ import(
     pb "github.com/tradingAI/proto/gen/go/scheduler"
     "github.com/golang/glog"
     "fmt"
+    "strings"
 )
 
 type TbasePlugin struct {}
+
+func GetTbaseInstallRepoCmds(url string, tag string) (cmds []string){
+    segments := strings.Split(url, "/")
+    name := segments[cap(segments) - 1]
+    cloneCmd := fmt.Sprintf("git clone %s.git", url)
+    checkoutCmd := fmt.Sprintf("git checkout -b %s", tag)
+    cdCmd := fmt.Sprintf("cd %s", name)
+    pipCmd := "pip install -e ."
+    cmds = []string{cloneCmd, cdCmd, checkoutCmd, pipCmd}
+    return
+}
 
 func (p *TbasePlugin) GenerateCmds(input *pb.JobInput)(cmds []string, err error){
     switch input.GetInput().(type) {

@@ -168,6 +168,7 @@ github.com/tradingAI/go v0.0.0-20200320075057-e810e5a7b406/go.mod h1:7xB/BzpFZLa
 github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc h1:mgKREAV7f731S9b43+DEd3T7ignu5pnxH4iaYnNPSCY=
 github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc/go.mod h1:wrHlRerPZUr9cTZktZ78wHp9vxveYFeb3hbbif6YF4o=
 github.com/tradingAI/tweb v0.1.24/go.mod h1:0Fugfpp0EzHP7UjEWx4aWjQCZqhyyyneBtePyRRO9Ew=
+github.com/tradingai/runner v0.0.0-20200406080958-acc830657afc h1:9zCt8tZoNjJPzrXPhu4ooG46Oa9mXRqR24sNRdDdK8U=
 github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGrc=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=

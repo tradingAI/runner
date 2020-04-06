@@ -4,9 +4,10 @@ import (
 	"os"
 	"path"
 	"strconv"
-	"strings"
+	"fmt"
 
 	"github.com/golang/glog"
+	plugins "github.com/tradingAI/runner/plugins"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
@@ -29,14 +30,16 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 		return
 	}
 	// TODO: write cmds
-	f.Write([]byte("echo " + strings.Repeat("==", 40) + "\n"))
-	for i := 0; i < 10; i++ {
-		f.Write([]byte("echo " + strconv.Itoa(i) + "\n"))
-		f.Write([]byte("echo " + strings.Repeat("====", i+1) + "\n"))
-		f.Write([]byte("sleep 1s\n"))
-		f.Write([]byte("date\n"))
+	p := &plugins.TbasePlugin{}
+	commands, err := p.GenerateCmds(job.Input)
+	if err != nil {
+		glog.Error(err)
+		return
 	}
-
+	for _, cmd := range commands {
+		line := fmt.Sprintf("%s\n", cmd)
+		f.Write([]byte(line))
+	}
 	f.Close()
 	return
 }

@@ -1,4 +1,4 @@
-.PHONY: install update proto run down test build_linux build_darwin clean
+.PHONY: install update proto run down test, docker_test build_linux build_darwin clean
 
 install:
 	go mod init
@@ -6,6 +6,9 @@ install:
 
 update:
 	go mod tidy
+
+test:
+	go test -v ./...
 
 proto:
 	bash proto.sh
@@ -16,7 +19,7 @@ run:
 down:
 	docker-compose -f docker-compose.yml down
 
-test:
+docker_test:
 	docker-compose up test
 
 build_linux: proto
