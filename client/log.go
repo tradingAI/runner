@@ -3,6 +3,7 @@ package client
 import (
 	"bufio"
 	"context"
+	"fmt"
 	"os"
 	"path"
 
@@ -18,7 +19,7 @@ func (c *Client) createLogFile(id string) (logFilePath string) {
 			glog.Error(err)
 		}
 	}
-	logFileName := id + ".log"
+	logFileName := fmt.Sprintf("%s.log", id)
 	logFilePath = path.Join(c.Conf.JobLogDir, logFileName)
 	f, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
