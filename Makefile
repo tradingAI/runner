@@ -14,7 +14,7 @@ proto:
 	bash proto.sh
 
 run:
-	docker-compose -f docker-compose.yml up runner
+	go run main/main.go
 
 down:
 	docker-compose -f docker-compose.yml down

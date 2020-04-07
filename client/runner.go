@@ -28,9 +28,9 @@ type Client struct {
 func New(conf Conf) (c *Client, err error) {
 	// make client
 	c = &Client{
-		Conf: conf,
-		ID: "test_runner_id", // TODO: use uuid
-		Token: "test_token",  // TODO: use evn token
+		Conf:  conf,
+		ID:    "test_runner_id", // TODO: use uuid
+		Token: "test_token",     // TODO: use evn token
 	}
 
 	c.Minio, err = minio2.NewMinioClient(c.Conf.Minio)
@@ -59,8 +59,8 @@ func (c *Client) StartOrDie() (err error) {
 		<-t.C
 		c.Heartbeat()
 		c.Listen()
-		// TODO: remove return
-		time.Sleep(1 * time.Hour)
+		// TODO: remove sleep
+		time.Sleep(2 * time.Hour)
 	}
 	return
 }
@@ -81,7 +81,7 @@ func (c *Client) getCreateJobFromRedis() (job *pb.Job, err error) {
 		Id:       uint64(123456789),
 		RunnerId: c.ID,
 		Type:     pb.JobType_TRAIN,
-		Input:    plugins.CreateTestTbaseTrainJobInput(),
+		Input:    plugins.CreateDefaultTbaseTrainJobInput(),
 	}
 	return job, nil
 }
@@ -117,10 +117,6 @@ func (c *Client) Listen() (err error) {
 	if stopJob != nil {
 		go func(c *Client) {
 			err := c.StopJob(stopJob.Id)
-			if err != nil {
-				glog.Error(err)
-			}
-			err = c.RemoveContainer(stopJob.Id)
 			if err != nil {
 				glog.Error(err)
 			}

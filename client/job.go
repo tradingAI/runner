@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -35,6 +36,7 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image:        DEFAULT_IMAGE,
 		Cmd:          c.getCmd(TARGET_SHELL_PATH),
+		Env:          []string{fmt.Sprintf("TUSHARE_TOKEN=%s", c.Conf.TushareToken)},
 		Tty:          true,
 		AttachStdout: true,
 		AttachStderr: true,
@@ -56,6 +58,8 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		glog.Error(err)
 	}
+
+	defer c.RemoveContainer(job.Id)
 
 	c.Containers[job.Id] = Container{
 		Name:    strconv.FormatUint(job.Id, 10),
@@ -94,6 +98,10 @@ func (c *Client) StopJob(id uint64) (err error) {
 		glog.Error(err)
 	}
 	glog.Infof("runner %s stopped job %d, container id: %s", c.ID, id, container_id)
+	err = c.RemoveContainer(id)
+	if err != nil {
+		glog.Error(err)
+	}
 	return
 }
 

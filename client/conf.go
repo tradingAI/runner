@@ -14,6 +14,7 @@ type Conf struct {
 	HeartbeatSeconds int
 	JobLogDir        string
 	JobShellDir      string
+	TushareToken     string
 }
 
 // LoadConf load config from env
@@ -48,6 +49,7 @@ func LoadConf() (conf Conf, err error) {
 		HeartbeatSeconds: heartbeatSeconds,
 		JobLogDir:        os.Getenv("JOB_LOG_DIR"),
 		JobShellDir:      os.Getenv("JOB_SHELL_DIR"),
+		TushareToken:     os.Getenv("TUSHARE_TOKEN"),
 	}
 
 	if err = conf.Validate(); err != nil {

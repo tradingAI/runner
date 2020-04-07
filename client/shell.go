@@ -28,16 +28,15 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 	if err != nil {
 		glog.Error(err)
 	}
-	// TODO: write cmds
 	p := &plugins.TbasePlugin{}
-	commands, err := p.GenerateCmds(job.Input)
+	commands, err := p.GenerateCmds(job.Input, c.Minio)
 	glog.Infof("GenerateCmds len %d", cap(commands))
 	if err != nil {
 		glog.Error(err)
 	}
 	for _, cmd := range commands {
 		line := fmt.Sprintf("%s\n", cmd)
-		glog.Info(line)
+		// glog.Info(line)
 		f.Write([]byte(line))
 	}
 	f.Close()

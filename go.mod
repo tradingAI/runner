@@ -27,10 +27,8 @@ require (
 	github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000
-	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
 	golang.org/x/sys v0.0.0-20200331124033-c3d80250170d // indirect
 	golang.org/x/text v0.3.2 // indirect
-	golang.org/x/tools v0.0.0-20200406144418-7db14c95bfa9 // indirect
 	google.golang.org/genproto v0.0.0-20200403120447-c50568487044 // indirect
 )

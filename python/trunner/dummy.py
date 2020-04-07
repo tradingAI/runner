@@ -21,6 +21,18 @@ class DummyRunner(TRunner):
         print("uploading inference results")
         return None
 
+    def train(self):
+        print("train")
+        return None
+
+    def eval(self):
+        print("eval")
+        return None
+
+    def inference(self):
+        print("inference")
+        return None
+
 
 if __name__ == '__main__':
     r = DummyRunner()
