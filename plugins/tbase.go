@@ -1,6 +1,7 @@
 package plugins
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/golang/glog"
@@ -13,14 +14,28 @@ func (p *TbasePlugin) GenerateCmds(input *pb.JobInput) (cmds []string, err error
 	switch input.GetInput().(type) {
 	case *pb.JobInput_EvalInput:
 		glog.Info("JobInput_EvalInput")
-		return p.getEvalJobCmds(input)
+		cmds, err = p.getEvalJobCmds(input)
+		if err != nil {
+			glog.Error(err)
+			return
+		}
 	case *pb.JobInput_InferInput:
 		glog.Info("JobInput_InferInput")
-		return p.getInferJobCmds(input)
+		cmds, err = p.getInferJobCmds(input)
+		if err != nil {
+			glog.Error(err)
+			return
+		}
 	case *pb.JobInput_TrainInput:
 		glog.Info("JobInput_TrainInput")
-		return p.getTrainJobCmds(input)
+		cmds, err = p.getTrainJobCmds(input)
+		if err != nil {
+			glog.Error(err)
+			return
+		}
 	}
+	err = errors.New("plugins GenerateCmds input invalid")
+	glog.Error(err)
 	return
 }
 

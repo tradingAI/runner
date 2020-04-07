@@ -1,10 +1,10 @@
 package client
 
 import (
+	"errors"
 	"os"
 	"strconv"
 
-	"github.com/golang/glog"
 	minio "github.com/tradingAI/go/s3/minio"
 )
 
@@ -21,20 +21,17 @@ type Conf struct {
 func LoadConf() (conf Conf, err error) {
 	minioPort, err := strconv.Atoi(os.Getenv("RUNNER_MINIO_PORT"))
 	if err != nil {
-		glog.Error(err)
-		return
+		panic(err)
 	}
 
 	minioSecure, err := strconv.ParseBool(os.Getenv("RUNNER_MINIO_SECURE"))
 	if err != nil {
-		glog.Error(err)
-		return
+		panic(err)
 	}
 
 	heartbeatSeconds, err := strconv.Atoi(os.Getenv("HEARTBEAT_SECONDS"))
 	if err != nil {
-		glog.Error(err)
-		return
+		panic(err)
 	}
 
 	conf = Conf{
@@ -53,8 +50,7 @@ func LoadConf() (conf Conf, err error) {
 	}
 
 	if err = conf.Validate(); err != nil {
-		glog.Error(err)
-		return
+		panic(err)
 	}
 
 	return
@@ -62,8 +58,12 @@ func LoadConf() (conf Conf, err error) {
 
 func (c *Conf) Validate() (err error) {
 	if err = c.Minio.Validate(); err != nil {
-		glog.Error(err)
-		return
+		panic(err)
+	}
+	if c.TushareToken == "" {
+		errMsg := "TushareToken is empty"
+		err = errors.New(errMsg)
+		panic(err)
 	}
 	return
 }
