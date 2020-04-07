@@ -30,3 +30,8 @@ build_darwin: proto
 
 build_prod_image:
 	docker build -f Dockerfile --no-cache -t tradingai/runner:latest .
+
+rm_run:
+	docker stop 123456789
+	docker rm 123456789
+	go run main/main.go
