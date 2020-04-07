@@ -1,4 +1,13 @@
+import codecs
+import os
+
 from setuptools import find_packages, setup
+
+
+def read(fname):
+    return codecs.open(os.path.join(
+        os.path.dirname(__file__), fname)).read().strip()
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -10,8 +19,8 @@ def read_install_requires():
 
 
 setup(name='trunner',
-      version='1.0.1',
-      description='runner用于上传参数的接口定义',
+      version=read('trunner/VERSION.txt'),
+      description='runner于运行job的py package 封装',
       url='https://github.com/tradingAI/runner/tree/master/python',
       author='liuwen',
       author_email='liuwen.w@qq.com',
@@ -27,4 +36,5 @@ setup(name='trunner',
         ],
       python_requires='>=3',
       install_requires=read_install_requires(),
+      package_data={'': ['*.csv', '*.txt']},
       )

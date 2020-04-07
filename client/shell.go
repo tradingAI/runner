@@ -1,13 +1,14 @@
 package client
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"strconv"
-	"strings"
 
 	"github.com/golang/glog"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
+	plugins "github.com/tradingAI/runner/plugins"
 )
 
 func (c *Client) getCmd(shellPath string) (cmd []string) {
@@ -19,6 +20,7 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 		err = os.MkdirAll(c.Conf.JobShellDir, 0755)
 		if err != nil {
 			glog.Error(err)
+			return
 		}
 	}
 	shellFileName := strconv.FormatUint(job.Id, 10) + ".sh"
@@ -28,15 +30,18 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 		glog.Error(err)
 		return
 	}
-	// TODO: write cmds
-	f.Write([]byte("echo " + strings.Repeat("==", 40) + "\n"))
-	for i := 0; i < 10; i++ {
-		f.Write([]byte("echo " + strconv.Itoa(i) + "\n"))
-		f.Write([]byte("echo " + strings.Repeat("====", i+1) + "\n"))
-		f.Write([]byte("sleep 1s\n"))
-		f.Write([]byte("date\n"))
+	p := &plugins.TbasePlugin{}
+	commands, err := p.GenerateCmds(job.Input)
+	glog.Infof("GenerateCmds len %d", cap(commands))
+	if err != nil {
+		glog.Error(err)
+		return
 	}
-
+	for _, cmd := range commands {
+		line := fmt.Sprintf("%s\n", cmd)
+		// glog.Info(line)
+		f.Write([]byte(line))
+	}
 	f.Close()
 	return
 }

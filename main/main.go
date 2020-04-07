@@ -4,14 +4,13 @@ import (
 	"flag"
 
 	"github.com/golang/glog"
-  	"github.com/tradingAI/runner/client"
+	"github.com/tradingAI/runner/client"
 )
-
 
 func main() {
 	flag.Parse()
 	flag.Set("logtostderr", "true")
-	
+
 	runClient()
 }
 

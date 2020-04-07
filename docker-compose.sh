@@ -9,6 +9,6 @@ echo `pwd`
 
 cd runner
 
-make proto
+bash proto.sh
 
 go test -v ./...
