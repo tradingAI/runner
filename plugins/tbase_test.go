@@ -23,9 +23,9 @@ func TestTbaseGenerateTrainCmds(t *testing.T) {
 	actual, _ := p.GenerateCmds(input)
 	expected := []string{
 		"cd /root/trade/tenvs && git pull",
-		"git checkout -b v1.0.4 && pip install -e .",
+		"git checkout -b v1.0.5 && pip install -e .",
 		"cd /root/trade/tbase && git pull",
-		"git checkout -b v0.1.5 && pip install -e .",
+		"git checkout -b v0.1.6 && pip install -e .",
 		"python -m tbase.run --alg ddpg",
 	}
 	assert.Equal(t, expected, actual)
