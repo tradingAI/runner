@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/golang/glog"
@@ -34,8 +33,6 @@ func (p *TbasePlugin) GenerateCmds(input *pb.JobInput) (cmds []string, err error
 			return
 		}
 	}
-	err = errors.New("plugins GenerateCmds input invalid")
-	glog.Error(err)
 	return
 }
 

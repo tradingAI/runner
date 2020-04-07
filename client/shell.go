@@ -20,6 +20,7 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 		err = os.MkdirAll(c.Conf.JobShellDir, 0755)
 		if err != nil {
 			glog.Error(err)
+			return
 		}
 	}
 	shellFileName := strconv.FormatUint(job.Id, 10) + ".sh"
@@ -27,12 +28,14 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 	f, err := os.OpenFile(shellFilePath, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	if err != nil {
 		glog.Error(err)
+		return
 	}
 	p := &plugins.TbasePlugin{}
 	commands, err := p.GenerateCmds(job.Input)
 	glog.Infof("GenerateCmds len %d", cap(commands))
 	if err != nil {
 		glog.Error(err)
+		return
 	}
 	for _, cmd := range commands {
 		line := fmt.Sprintf("%s\n", cmd)
