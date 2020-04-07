@@ -23,7 +23,7 @@ func (c *Client) createLogFile(id string) (logFilePath string) {
 	logFilePath = path.Join(c.Conf.JobLogDir, logFileName)
 	f, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		glog.Fatal(err)
+		glog.Error(err)
 		return
 	}
 	f.Close()
@@ -55,7 +55,7 @@ func writeLog(containerId string, filePath string) (err error) {
 	f, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, 0644)
 	defer f.Close()
 	if err != nil {
-		glog.Fatal(err)
+		glog.Error(err)
 		return
 	}
 
