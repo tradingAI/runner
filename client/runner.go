@@ -41,9 +41,6 @@ func New(conf Conf) (c *Client, err error) {
 
 	c.Containers = make(map[uint64]Container)
 
-	// TODO remove
-	c.Conf.HeartbeatSeconds = 1500
-
 	return
 }
 
