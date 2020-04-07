@@ -25,6 +25,7 @@ require (
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/stretchr/testify v1.5.1
 	github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc
+	github.com/tradingAI/proto/gen/go/common v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect

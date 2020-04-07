@@ -29,7 +29,7 @@ func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
 		glog.Error(err)
 	}
 	p := &plugins.TbasePlugin{}
-	commands, err := p.GenerateCmds(job.Input, c.Minio)
+	commands, err := p.GenerateCmds(job.Input)
 	glog.Infof("GenerateCmds len %d", cap(commands))
 	if err != nil {
 		glog.Error(err)

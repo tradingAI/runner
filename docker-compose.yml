@@ -18,6 +18,7 @@ services:
       JOB_SHELL_DIR: ${JOB_SHELL_DIR}
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
+
   minio:
     image: minio/minio:latest
     ports:
@@ -29,6 +30,7 @@ services:
     volumes:
       - /tmp/tweb/minio/data:/data
     command: ["server", "/data"]
+
   runner:
     image: registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
     container_name: tradingai_runner
