@@ -1,6 +1,6 @@
 # trunner
 
-runner 上传参数的接口封装
+runner 运行job py封装
 
 ## 使用
 
