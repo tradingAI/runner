@@ -59,7 +59,7 @@ func (c *Client) StartOrDie() (err error) {
 		<-t.C
 		c.Heartbeat()
 		c.Listen()
-		// TODO: remove sleep
+		// TODO: remove sleep, 本地测试用
 		time.Sleep(2 * time.Hour)
 	}
 	return
