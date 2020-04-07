@@ -36,4 +36,5 @@ setup(name='trunner',
         ],
       python_requires='>=3',
       install_requires=read_install_requires(),
+      package_data={'': ['*.csv', '*.txt']},
       )

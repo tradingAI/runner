@@ -4,7 +4,7 @@ runner 运行job python封装
 
 ## 使用
 
-`pip install trunner>=1.0.2`
+`pip install trunner>=1.0.3`
 
 - tbase
     - [x] train: `python3 -m trunner.tbase --alg ddpg --codes 000001.SZ --seed 0`
