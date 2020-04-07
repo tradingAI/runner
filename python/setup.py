@@ -1,4 +1,13 @@
+import codecs
+import os
+
 from setuptools import find_packages, setup
+
+
+def read(fname):
+    return codecs.open(os.path.join(
+        os.path.dirname(__file__), fname)).read().strip()
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
