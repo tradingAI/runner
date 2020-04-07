@@ -19,7 +19,7 @@ def read_install_requires():
 
 
 setup(name='trunner',
-      version='1.0.1',
+      version=read('trunner/VERSION.txt'),
       description='runner用于上传参数的接口定义',
       url='https://github.com/tradingAI/runner/tree/master/python',
       author='liuwen',
