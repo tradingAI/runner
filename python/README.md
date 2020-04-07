@@ -1,6 +1,6 @@
 # trunner
 
-runner 运行job py封装
+runner 运行job python封装
 
 ## 使用
 
