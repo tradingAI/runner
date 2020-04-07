@@ -3,8 +3,8 @@ package plugins
 import (
 	"fmt"
 
-	mpb "github.com/tradingAI/proto/gen/go/model"
 	cpb "github.com/tradingAI/proto/gen/go/common"
+	mpb "github.com/tradingAI/proto/gen/go/model"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
@@ -35,18 +35,18 @@ func CreateDefaultTbaseEvalJobInput() (input *pb.JobInput) {
 	parameters["alg"] = "ddpg"
 	evalInput := &mpb.TbaseEvaluateInput{
 		Model: &cpb.Model{
-			Id: uint64(123456789),
-			Name: "ddpg",
-			Version: "v1.0.0",
+			Id:          uint64(123456789),
+			Name:        "ddpg",
+			Version:     "v1.0.0",
 			Description: "",
-			FileType: "tar.gz",
-			User: &cpb.User{Id: uint64(1)},
-			Status: cpb.ModelStatus_SUCCESS,
-			Bucket: "test_bucket",
-			ObjName: "test_obj_name.tar.gz",
+			FileType:    "tar.gz",
+			User:        &cpb.User{Id: uint64(1)},
+			Status:      cpb.ModelStatus_SUCCESS,
+			Bucket:      "test_bucket",
+			ObjName:     "test_obj_name.tar.gz",
 		},
 		Start: "20190101",
-		End: "20200101",
+		End:   "20200101",
 	}
 	input = &pb.JobInput{
 		Input: &pb.JobInput_EvalInput{evalInput},
@@ -54,21 +54,20 @@ func CreateDefaultTbaseEvalJobInput() (input *pb.JobInput) {
 	return
 }
 
-
 func CreateDefaultTbaseInferJobInput() (input *pb.JobInput) {
 	parameters := make(map[string]string)
 	parameters["alg"] = "ddpg"
 	infeInput := &mpb.TbaseInferInput{
 		Model: &cpb.Model{
-			Id: uint64(123456789),
-			Name: "ddpg",
-			Version: "v1.0.0",
+			Id:          uint64(123456789),
+			Name:        "ddpg",
+			Version:     "v1.0.0",
 			Description: "",
-			FileType: "tar.gz",
-			User: &cpb.User{Id: uint64(1)},
-			Status: cpb.ModelStatus_SUCCESS,
-			Bucket: "test_bucket",
-			ObjName: "test_obj_name.tar.gz",
+			FileType:    "tar.gz",
+			User:        &cpb.User{Id: uint64(1)},
+			Status:      cpb.ModelStatus_SUCCESS,
+			Bucket:      "test_bucket",
+			ObjName:     "test_obj_name.tar.gz",
 		},
 		Date: "20200101",
 	}
