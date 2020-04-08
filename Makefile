@@ -1,4 +1,4 @@
-.PHONY: install update run proto down test docker_test build_linux build_darwin
+.PHONY: install update run proto down test docker_test build_linux build_darwin run_prod
 
 install:
 	go mod init
@@ -39,3 +39,6 @@ rm_run:
 	docker stop 123456789
 	docker rm 123456789
 	go run main/main.go
+
+run_prod:
+	docker-compose -f starter/docker-compose-prod.yml up
