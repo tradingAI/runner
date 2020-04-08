@@ -1,4 +1,4 @@
-.PHONY: install update run proto down test docker_test build_linux build_darwin run_prod
+.PHONY: install update run proto down test docker_test build_linux build_darwin prod
 
 install:
 	go mod init
@@ -27,10 +27,10 @@ down:
 	docker-compose down --remove-orphans
 
 build_linux: proto
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o runner main/main.go
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 build -o runner main/main.go
 
 build_darwin: proto
-	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o runner main/main.go
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 build -o runner main/main.go
 
 build_prod_image:
 	docker build -f Dockerfile --no-cache -t tradingai/runner:latest .
@@ -40,6 +40,6 @@ rm_run:
 	docker rm 123456789
 	go run main/main.go
 
-run_prod:
+prod:
 	docker pull registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
 	docker-compose -f starter/docker-compose-prod.yml up
