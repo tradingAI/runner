@@ -13,7 +13,7 @@ func TestGetInstallTbaseRepoCmds(t *testing.T) {
 	actual := GetTbaseInstallRepoCmds(tenvsURL, tenvsTag)
 	expected := []string{
 		"cd /root/trade/tenvs && git pull",
-		"git checkout -b v1.0.4 && pip install -e .",
+		"git checkout tags/v1.0.4 -b v1.0.4-branch && pip install -e .",
 	}
 	assert.Equal(t, expected, actual)
 }
@@ -26,9 +26,9 @@ func TestTbaseGenerateTrainCmds(t *testing.T) {
 		ROOT_DATA_DIR, ROOT_DATA_DIR, ROOT_DATA_DIR)
 	expected := []string{
 		"cd /root/trade/tenvs && git pull",
-		"git checkout -b v1.0.8 && pip install -e .",
+		"git checkout tags/v1.0.8 -b v1.0.8-branch && pip install -e .",
 		"cd /root/trade/tbase && git pull",
-		"git checkout -b v0.1.8 && pip install -e .",
+		"git checkout tags/v0.1.8 -b v0.1.8-branch && pip install -e .",
 		runCmd,
 	}
 	assert.Equal(t, expected, actual)
