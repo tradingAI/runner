@@ -11,7 +11,7 @@ import (
 func GetTbaseInstallRepoCmds(repo string, tag string) (cmds []string) {
 	// https://github.com/tradingAI/tbase/blob/2ccac243409fe93c15c0ceb4cff9fe419166590e/Dockerfile
 	pullCmd := fmt.Sprintf("cd /root/trade/%s && git pull", repo)
-	installCmd := fmt.Sprintf("git checkout -b %s && pip install -e .", tag)
+	installCmd := fmt.Sprintf("git checkout tags/%s -b %s-branch && pip install -e .", tag, tag)
 	cmds = []string{pullCmd, installCmd}
 	return
 }
