@@ -29,6 +29,9 @@ build_darwin: proto
 	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 packr2 build -o client main/main.go
 
 build_prod_image:
+	go get -u github.com/tradingAI/proto
+	bash proto.sh
+	go mod tidy
 	docker build -f Dockerfile --no-cache -t tradingai/runner:latest .
 
 rm_run:
