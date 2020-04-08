@@ -6,6 +6,7 @@ ENV PROJECT_PATH=${ROOT}/runner
 
 COPY main ${PROJECT_PATH}/main
 COPY client ${PROJECT_PATH}/client
+COPY plugins ${PROJECT_PATH}/plugins
 COPY Makefile ${PROJECT_PATH}/Makefile
 COPY proto.sh ${PROJECT_PATH}/proto.sh
 COPY go.mod ${PROJECT_PATH}/go.mod
