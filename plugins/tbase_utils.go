@@ -20,8 +20,8 @@ func CreateDefaultTbaseTrainJobInput() (input *pb.JobInput) {
 	parameters := make(map[string]string)
 	parameters["alg"] = "ddpg"
 	trainInput := &mpb.TbaseTrainInput{
-		TenvsTag:   "v1.0.5",
-		TbaseTag:   "v0.1.6",
+		TenvsTag:   "v1.0.8",
+		TbaseTag:   "v0.1.8",
 		Parameters: parameters,
 	}
 	input = &pb.JobInput{

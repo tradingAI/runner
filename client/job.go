@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"strconv"
 
 	"docker.io/go-docker"
 	"docker.io/go-docker/api/types"
 	"docker.io/go-docker/api/types/container"
-	"docker.io/go-docker/api/types/mount"
 	"github.com/golang/glog"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
@@ -31,45 +31,43 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	}
 	io.Copy(os.Stdout, reader)
 
-	shellFilePath := c.createShellFile(job)
+	err = c.createShellFile(job)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
 	jobIdStr := strconv.FormatUint(job.Id, 10)
 	logFilePath := c.createLogFile(jobIdStr)
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image:        DEFAULT_IMAGE,
-		Cmd:          c.getCmd(TARGET_SHELL_PATH),
+		Cmd:          c.getCmd(path.Join(c.Conf.JobShellDir, jobIdStr)),
 		Env:          []string{fmt.Sprintf("TUSHARE_TOKEN=%s", c.Conf.TushareToken)},
 		Tty:          true,
 		AttachStdout: true,
 		AttachStderr: true,
 	}, &container.HostConfig{
-		Mounts: []mount.Mount{
-			{
-				Type:   mount.TypeBind,
-				Source: shellFilePath,
-				Target: TARGET_SHELL_PATH,
-			},
-		},
+		Mounts: c.getTbaseMounts(jobIdStr),
 	}, nil, jobIdStr)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 
-	glog.Infof("runner %s created job %d, container id: %s", c.ID, job.Id, resp.ID)
-
-	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
-		glog.Error(err)
-		return err
-	}
-
-	defer c.RemoveContainer(job.Id)
-
 	c.Containers[job.Id] = Container{
 		Name:    strconv.FormatUint(job.Id, 10),
 		ID:      resp.ID,
 		ShortID: resp.ID[:12],
 		Job:     job,
+	}
+
+	defer c.RemoveContainer(job.Id)
+
+	glog.Infof("runner %s created job %d, container id: %s", c.ID, job.Id, resp.ID)
+
+	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+		glog.Error(err)
+		return err
 	}
 
 	// stream read container log and write into file
@@ -85,6 +83,7 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 		}
 	case <-statusCh:
 		glog.Infof("runner %s completed job %d, container id: %s", c.ID, job.Id, resp.ID)
+		// c.RemoveContainer(job.Id)
 		ch <- 1
 	}
 	<-ch

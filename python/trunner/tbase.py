@@ -14,7 +14,7 @@ from trunner.base import TRunner
 class TbaseRunner(TRunner):
     def __init__(self):
         self.name = "tbase_runner"
-        logger.info("tbase version: %s" % tenvs.__version__)
+        logger.info("tenvs version: %s" % tenvs.__version__)
         logger.info("tbase version: %s" % tbase.__version__)
 
     def run(self):

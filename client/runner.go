@@ -48,6 +48,8 @@ func (c *Client) StartOrDie() (err error) {
 	glog.Info("Starting runner")
 	c.Heartbeat()
 	c.Listen()
+	// TODO: remove , 测试用
+	c.Conf.HeartbeatSeconds = 1500
 	d := time.Duration(int64(time.Second) * int64(c.Conf.HeartbeatSeconds))
 	t := time.NewTicker(d)
 	defer t.Stop()
@@ -56,8 +58,8 @@ func (c *Client) StartOrDie() (err error) {
 		<-t.C
 		c.Heartbeat()
 		c.Listen()
-		// TODO: remove sleep, 本地测试用
-		time.Sleep(2 * time.Hour)
+		// TODO: remove 本地测试用
+		return
 	}
 	return
 }
