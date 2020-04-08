@@ -10,8 +10,6 @@ jobs:
 
     - name: Run tests in docker container
       env:
-        BAZEL_USER_ROOT: /home/runner/BAZEL_USER_ROOT
-        OUTPUT_DIR: /home/runner/OUTPUT_DIR
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         RUNNER_MINIO_ACCESS_KEY: ${{ secrets.RUNNER_MINIO_ACCESS_KEY }}
         RUNNER_MINIO_SECRET_KEY: ${{ secrets.RUNNER_MINIO_SECRET_KEY }}
