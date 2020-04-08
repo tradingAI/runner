@@ -13,7 +13,7 @@ services:
       RUNNER_MINIO_HOST: ${RUNNER_MINIO_HOST}
       RUNNER_MINIO_PORT: ${RUNNER_MINIO_PORT}
       RUNNER_MINIO_SECURE: ${RUNNER_MINIO_PORT}
-      HEARTBEAT_SECONDS: 20
+      HEARTBEAT_SECONDS: 10
       RUNNER_DATA_DIR: /root/runner/data/
     volumes:
       - .:/go/src/github.com/tradingAI/runner/

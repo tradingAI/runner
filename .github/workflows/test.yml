@@ -18,7 +18,5 @@ jobs:
         RUNNER_MINIO_HOST: ${{ secrets.RUNNER_MINIO_HOST }}
         RUNNER_MINIO_PORT: ${{ secrets.RUNNER_MINIO_PORT }}
         RUNNER_MINIO_SECURE: ${{ secrets.RUNNER_MINIO_SECURE }}
-        HEARTBEAT_SECONDS: ${{ secrets.HEARTBEAT_SECONDS }}
-        RUNNER_DATA_DIR: $${{ secrets.RUNNER_DATA_DIR }}
 
       run: docker-compose up --exit-code-from test test

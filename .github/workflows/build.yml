@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Run test in docker container
-      run: docker-compose -f docker-compose.yml up --exit-code-from test test
+      run: docker-compose up --exit-code-from test test
       env:
         TUSHARE_TOKEN: test
         TUSHARE_API: https://api.tushare.pro
@@ -21,8 +21,6 @@ jobs:
         RUNNER_MINIO_HOST: 127.0.0.1
         RUNNER_MINIO_PORT: 5001
         RUNNER_MINIO_SECURE: false
-        HEARTBEAT_SECONDS: 20
-        RUNNER_DATA_DIR: /tmp/runner/
 
   build:
     runs-on: ubuntu-latest
