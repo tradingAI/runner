@@ -14,10 +14,17 @@ jobs:
     - name: Run test in docker container
       run: docker-compose -f docker-compose.yml up --exit-code-from test test
       env:
-        TWEB_POSTGRES_PORT: 5432
-        RUNNER_MINIO_PORT: 9000
-        TWEB_PORT: 8888
+        TUSHARE_TOKEN: test
+        TUSHARE_API: https://api.tushare.pro
+        RUNNER_MINIO_ACCESS_KEY: test
+        RUNNER_MINIO_SECRET_KEY: test
+        RUNNER_MINIO_HOST: 127.0.0.1
+        RUNNER_MINIO_PORT: 5001
+        RUNNER_MINIO_SECURE: false
         HEARTBEAT_SECONDS: 20
+        JOB_LOG_DIR: /tmp/job/log
+        JOB_SHELL_DIR: /tmp/job/shell
+
 
   build:
     runs-on: ubuntu-latest
