@@ -25,6 +25,6 @@ Label maintainer="liuwen.w@qq.com"
 
 ENV PROJECT_PATH=/go/src/github.com/tradingAI/runner
 
-COPY --from=build ${PROJECT_PATH}/main/runner /
+COPY --from=build ${PROJECT_PATH}/runner /
 
 ENTRYPOINT ["/runner"]
