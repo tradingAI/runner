@@ -28,3 +28,4 @@ ENV PROJECT_PATH=/go/src/github.com/tradingAI/runner
 COPY --from=build ${PROJECT_PATH}/runner /
 
 ENTRYPOINT ["/runner"]
+CMD ["sh"]
