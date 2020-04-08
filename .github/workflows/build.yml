@@ -22,7 +22,7 @@ jobs:
         RUNNER_MINIO_PORT: 5001
         RUNNER_MINIO_SECURE: false
         HEARTBEAT_SECONDS: 20
-        RUNNER_DATA_DIR: /tmp/runner
+        RUNNER_DATA_DIR: /tmp/runner/
 
   build:
     runs-on: ubuntu-latest
