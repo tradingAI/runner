@@ -47,4 +47,4 @@ services:
     restart: always
     volumes:
       - .:/go/src/github.com/tradingAI/runner
-      - ${RUNNER_DATA_DIR}:/root/runner/data/
+      - ${RUNNER_DATA_DIR}:/root/runner/data/:rw
