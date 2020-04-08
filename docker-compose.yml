@@ -17,7 +17,7 @@ services:
       RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
-      - /tmp/runner:${RUNNER_DATA_DIR}:rw
+      - ${RUNNER_DATA_DIR}:${RUNNER_DATA_DIR}:rw
 
   minio:
     image: minio/minio:latest
@@ -30,21 +30,3 @@ services:
     volumes:
       - /tmp/tweb/minio/data:/data
     command: ["server", "/data"]
-
-  # runner:
-  #   image: registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
-  #   container_name: tradingai_runner
-  #   environment:
-  #     TUSHARE_TOKEN: ${TUSHARE_TOKEN}
-  #     TUSHARE_API: https://api.tushare.pro
-  #     RUNNER_MINIO_ACCESS_KEY: ${RUNNER_MINIO_ACCESS_KEY}
-  #     RUNNER_MINIO_SECRET_KEY: ${RUNNER_MINIO_SECRET_KEY}
-  #     RUNNER_MINIO_HOST: ${RUNNER_MINIO_HOST}
-  #     RUNNER_MINIO_PORT: ${RUNNER_MINIO_PORT}
-  #     RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
-  #     HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
-  #     RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
-  #   restart: always
-  #   volumes:
-  #     - .:/go/src/github.com/tradingAI/runner
-  #     - ${RUNNER_DATA_DIR}:/root/runner/data/:rw
