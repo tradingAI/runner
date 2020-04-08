@@ -27,10 +27,10 @@ down:
 	docker-compose -f docker-compose.yml down
 
 build_linux: proto
-	GOOS=linux GOARCH=amd64 go build -o runner main/main.go
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 build -o runner main/main.go
 
 build_darwin: proto
-	GOOS=darwin GOARCH=amd64 go build -o runner main/main.go
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 build -o runner main/main.go
 
 build_prod_image:
 	docker build -f Dockerfile --no-cache -t tradingai/runner:latest .
@@ -41,4 +41,5 @@ rm_run:
 	go run main/main.go
 
 run_prod:
+	docker pull registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
 	docker-compose -f starter/docker-compose-prod.yml up
