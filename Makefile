@@ -1,4 +1,4 @@
-.PHONY: install update run down test docker_test build_linux build_darwin
+.PHONY: install update run proto down test docker_test build_linux build_darwin
 
 install:
 	go mod init
@@ -19,6 +19,9 @@ docker_test:
 run:
 	go run main/main.go
 
+proto:
+	bash proto.sh
+
 down:
 	docker-compose -f docker-compose.yml down
 
@@ -29,9 +32,6 @@ build_darwin: proto
 	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 packr2 build -o client main/main.go
 
 build_prod_image:
-	go get -u github.com/tradingAI/proto
-	bash proto.sh
-	go mod tidy
 	docker build -f Dockerfile --no-cache -t tradingai/runner:latest .
 
 rm_run:
