@@ -6,6 +6,7 @@ install:
 	go mod tidy
 
 update:
+	go get -u -v google.golang.org/grpc
 	go get -u github.com/tradingAI/proto
 	bash proto.sh
 	go mod tidy

@@ -24,12 +24,13 @@ require (
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/stretchr/testify v1.5.1
-	github.com/tradingAI/go v0.0.0-20200405140945-1af5566239dc
+	github.com/tradingAI/go v0.0.0-20200407065521-4e64a54b69c1
 	github.com/tradingAI/proto/gen/go/common v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
-	golang.org/x/sys v0.0.0-20200331124033-c3d80250170d // indirect
+	golang.org/x/sys v0.0.0-20200408040146-ea54a3c99b9b // indirect
 	golang.org/x/text v0.3.2 // indirect
-	google.golang.org/genproto v0.0.0-20200403120447-c50568487044 // indirect
+	google.golang.org/genproto v0.0.0-20200408120641-fbb3ad325eb7 // indirect
+	google.golang.org/grpc v1.28.1 // indirect
 )
