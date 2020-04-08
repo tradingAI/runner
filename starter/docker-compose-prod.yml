@@ -14,7 +14,7 @@ services:
       RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
       HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
       RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
-    restart: always
+    # restart: always
     command:
       /runner
     volumes:
