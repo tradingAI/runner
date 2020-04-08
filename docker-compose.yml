@@ -12,12 +12,12 @@ services:
       RUNNER_MINIO_SECRET_KEY: ${RUNNER_MINIO_SECRET_KEY}
       RUNNER_MINIO_HOST: ${RUNNER_MINIO_HOST}
       RUNNER_MINIO_PORT: ${RUNNER_MINIO_PORT}
-      RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
-      HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
-      RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
+      RUNNER_MINIO_SECURE: false
+      HEARTBEAT_SECONDS: 20
+      RUNNER_DATA_DIR: /root/runner/data
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
-      - ${RUNNER_DATA_DIR}:${RUNNER_DATA_DIR}:rw
+      - /root/runner/data:/root/runner/data:rw
 
   minio:
     image: minio/minio:latest
