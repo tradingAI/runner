@@ -16,7 +16,7 @@ services:
       HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
       RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
     volumes:
-      - .:/go/src/github.com/tradingAI/runner/
+      - .:/go/src/github.com/tradingAI/runner/:rw
 
   minio:
     image: minio/minio:latest
