@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"path"
 	"os"
+	"path"
 	"strconv"
 
 	"docker.io/go-docker"
@@ -41,7 +41,7 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image:        DEFAULT_IMAGE,
-		Cmd:          c.getCmd(path.Join(TARGET_SHELL_DIR, jobIdStr)),
+		Cmd:          c.getCmd(path.Join(c.Conf.JobShellDir, jobIdStr)),
 		Env:          []string{fmt.Sprintf("TUSHARE_TOKEN=%s", c.Conf.TushareToken)},
 		Tty:          true,
 		AttachStdout: true,

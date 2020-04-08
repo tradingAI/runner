@@ -15,7 +15,7 @@ func (c *Client) getCmd(shellPath string) (cmd []string) {
 	return []string{"sh", shellPath}
 }
 
-func (c *Client) createShellFile(job *pb.Job) (err error){
+func (c *Client) createShellFile(job *pb.Job) (err error) {
 	if _, err := os.Stat(c.Conf.JobShellDir); os.IsNotExist(err) {
 		err = os.MkdirAll(c.Conf.JobShellDir, 0755)
 		if err != nil {
@@ -25,7 +25,6 @@ func (c *Client) createShellFile(job *pb.Job) (err error){
 	}
 	id := strconv.FormatUint(job.Id, 10)
 	shellFilePath := path.Join(c.Conf.JobShellDir, id)
-	glog.Info(shellFilePath)
 	f, err := os.OpenFile(shellFilePath, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	if err != nil {
 		glog.Error(err)

@@ -20,11 +20,11 @@ func (c *Client) getTbaseMounts(id string) (mounts []mount.Mount) {
 }
 
 func (c *Client) getTbaseShellMount(id string) (m mount.Mount) {
-	mustCreateDir(c.Conf.JobShellDir)
+	mustCreateDir(plugins.JOB_SHELL_DIR)
 	return mount.Mount{
 		Type:   mount.TypeBind,
-		Source: c.Conf.JobShellDir,
-		Target: TARGET_SHELL_DIR,
+		Source: plugins.JOB_SHELL_DIR,
+		Target: plugins.JOB_SHELL_DIR,
 	}
 }
 

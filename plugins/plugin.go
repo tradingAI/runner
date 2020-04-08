@@ -1,14 +1,20 @@
 package plugins
 
 import (
+	"os"
+	"path"
+
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
-const MODEL_DIR = "/root/data/model/"
-const PROGRESS_BAR_DIR = "/root/data/progress_bar/"
-const TENSORBOARD_DIR = "/root/data/tensorboard/"
-const INFER_DIR = "/root/data/inferences/"
-const EVAL_DIR = "/root/data/evals/"
+var ROOT_DATA_DIR = os.Getenv("RUNNER_DATA_DIR")
+var JOB_SHELL_DIR = path.Join(ROOT_DATA_DIR, "shells")
+var JOB_LOG_DIR = path.Join(ROOT_DATA_DIR, "logs")
+var MODEL_DIR = path.Join(ROOT_DATA_DIR, "models")
+var PROGRESS_BAR_DIR = path.Join(ROOT_DATA_DIR, "progress_bars")
+var TENSORBOARD_DIR = path.Join(ROOT_DATA_DIR, "tensorboards")
+var INFER_DIR = path.Join(ROOT_DATA_DIR, "infers")
+var EVAL_DIR = path.Join(ROOT_DATA_DIR, "evals")
 
 type Plugin struct{}
 

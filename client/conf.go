@@ -7,17 +7,17 @@ import (
 
 	"github.com/golang/glog"
 	minio "github.com/tradingAI/go/s3/minio"
+	"github.com/tradingAI/runner/plugins"
 )
-
-const DATA_ROOT = "/tmp/data"
 
 type Conf struct {
 	StorageDir       string
 	Minio            minio.MinioConf
 	HeartbeatSeconds int
+	TushareToken     string
+	DataRootDir      string
 	JobLogDir        string
 	JobShellDir      string
-	TushareToken     string
 	ModelDir         string
 	ProgressBarDir   string
 	TensorboardDir   string
@@ -55,9 +55,15 @@ func LoadConf() (conf Conf, err error) {
 			Secure:    minioSecure,
 		},
 		HeartbeatSeconds: heartbeatSeconds,
-		JobLogDir:        os.Getenv("JOB_LOG_DIR"),
-		JobShellDir:      os.Getenv("JOB_SHELL_DIR"),
 		TushareToken:     os.Getenv("TUSHARE_TOKEN"),
+		DataRootDir:      plugins.ROOT_DATA_DIR,
+		JobLogDir:        plugins.JOB_LOG_DIR,
+		JobShellDir:      plugins.JOB_SHELL_DIR,
+		ModelDir:         plugins.MODEL_DIR,
+		ProgressBarDir:   plugins.PROGRESS_BAR_DIR,
+		TensorboardDir:   plugins.TENSORBOARD_DIR,
+		InferDir:         plugins.INFER_DIR,
+		EvalDir:          plugins.EVAL_DIR,
 	}
 
 	if err = conf.Validate(); err != nil {

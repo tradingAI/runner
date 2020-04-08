@@ -14,8 +14,7 @@ services:
       RUNNER_MINIO_PORT: ${RUNNER_MINIO_PORT}
       RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
       HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
-      JOB_LOG_DIR: ${JOB_LOG_DIR}
-      JOB_SHELL_DIR: ${JOB_SHELL_DIR}
+      RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
 
@@ -43,8 +42,7 @@ services:
       RUNNER_MINIO_PORT: ${RUNNER_MINIO_PORT}
       RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
       HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
-      JOB_LOG_DIR: ${JOB_LOG_DIR}
-      JOB_SHELL_DIR: ${JOB_SHELL_DIR}
+      RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
     depends_on:
       - minio
     restart: always
