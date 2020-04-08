@@ -29,40 +29,40 @@ func (c *Client) getTbaseShellMount(id string) (m mount.Mount) {
 }
 
 func (c *Client) getTbaseModelMount(id string) (m mount.Mount) {
-	jobDir := path.Join(c.Conf.ModelDir, id)
-	mustCreateDir(jobDir)
+	dir := path.Join(plugins.MODEL_DIR, id)
+	mustCreateDir(dir)
 	return mount.Mount{
 		Type:   mount.TypeBind,
-		Source: jobDir,
-		Target: plugins.DEFAULT_TBASE_MODEL_DIR,
+		Source: dir,
+		Target: plugins.MODEL_DIR,
 	}
 }
 
 func (c *Client) getTbaseProgressBarMount(id string) (m mount.Mount) {
-	mustCreateDir(c.Conf.ProgressBarDir)
+	mustCreateDir(plugins.PROGRESS_BAR_DIR)
 	return mount.Mount{
 		Type:   mount.TypeBind,
-		Source: c.Conf.ProgressBarDir,
-		Target: plugins.DEFAULT_TBASE_PROGRESS_BAR_DIR,
+		Source: plugins.PROGRESS_BAR_DIR,
+		Target: plugins.PROGRESS_BAR_DIR,
 	}
 }
 
 func (c *Client) getTbaseTensorboardMount(id string) (m mount.Mount) {
-	jobDir := path.Join(c.Conf.TensorboardDir, id)
-	mustCreateDir(jobDir)
+	dir := path.Join(c.Conf.TensorboardDir, id)
+	mustCreateDir(dir)
 	return mount.Mount{
 		Type:   mount.TypeBind,
-		Source: jobDir,
-		Target: plugins.DEFAULT_TBASE_TENSORBOARD_DIR,
+		Source: dir,
+		Target: plugins.TENSORBOARD_DIR,
 	}
 }
 
 func (c *Client) getTbaseInferMount(id string) (m mount.Mount) {
-	mustCreateDir(c.Conf.InferDir)
+	mustCreateDir(plugins.INFER_DIR)
 	return mount.Mount{
 		Type:   mount.TypeBind,
-		Source: c.Conf.InferDir,
-		Target: plugins.DEFAULT_TBASE_INFER_DIR,
+		Source: plugins.INFER_DIR,
+		Target: plugins.INFER_DIR,
 	}
 }
 
@@ -70,7 +70,7 @@ func (c *Client) getTbaseEvalMount(id string) (m mount.Mount) {
 	mustCreateDir(c.Conf.EvalDir)
 	return mount.Mount{
 		Type:   mount.TypeBind,
-		Source: c.Conf.EvalDir,
-		Target: plugins.DEFAULT_TBASE_EVAL_DIR,
+		Source: plugins.EVAL_DIR,
+		Target: plugins.EVAL_DIR,
 	}
 }

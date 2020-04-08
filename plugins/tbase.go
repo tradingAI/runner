@@ -10,12 +10,6 @@ import (
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
-const DEFAULT_TBASE_MODEL_DIR = "/root/data/model/"
-const DEFAULT_TBASE_PROGRESS_BAR_DIR = "/root/data/progress_bar/"
-const DEFAULT_TBASE_TENSORBOARD_DIR = "/root/data/tensorboard/"
-const DEFAULT_TBASE_INFER_DIR = "/root/data/inferences/"
-const DEFAULT_TBASE_EVAL_DIR = "/root/data/evals/"
-
 type TbasePlugin struct{}
 
 func (p *TbasePlugin) GenerateCmds(input *pb.JobInput, id string) (cmds []string, err error) {
@@ -62,9 +56,9 @@ func (p *TbasePlugin) getTrainJobCmds(input *pb.JobInput, id string) (cmds []str
 	// run commands
 	parametersStr := ""
 	parameters := input.GetTrainInput().GetParameters()
-	parameters["model_dir"] = DEFAULT_TBASE_MODEL_DIR
-	parameters["progress_bar_path"] = path.Join(DEFAULT_TBASE_PROGRESS_BAR_DIR, id)
-	parameters["tensorboard_dir"] = DEFAULT_TBASE_TENSORBOARD_DIR
+	parameters["model_dir"] = MODEL_DIR
+	parameters["progress_bar_path"] = path.Join(PROGRESS_BAR_DIR, id)
+	parameters["tensorboard_dir"] = TENSORBOARD_DIR
 	sorted_keys := make([]string, 0)
 	for k, _ := range parameters {
 		sorted_keys = append(sorted_keys, k)
@@ -83,8 +77,8 @@ func (p *TbasePlugin) getEvalJobCmds(input *pb.JobInput, id string) (cmds []stri
 	end := input.GetEvalInput().GetEnd()
 	// https://github.com/tradingAI/tbase/blob/2ccac243409fe93c15c0ceb4cff9fe419166590e/Dockerfile
 	cmds = append(cmds, "cd /root/trade/tbase")
-	modelDir := path.Join(DEFAULT_TBASE_MODEL_DIR, id)
-	evalDir := path.Join(DEFAULT_TBASE_EVAL_DIR, id)
+	modelDir := path.Join(MODEL_DIR, id)
+	evalDir := path.Join(EVAL_DIR, id)
 	// tbase会读取model中的meta 版本信息，自动checkout到相应版本运行程序
 	runCmd := fmt.Sprintf("python -m trunner.tbase --eval --model_dir %s --eval_result_path %s --eval_start %s --eval_end %s",
 		modelDir, evalDir, start, end)
@@ -96,8 +90,8 @@ func (p *TbasePlugin) getInferJobCmds(input *pb.JobInput, id string) (cmds []str
 	inferDate := input.GetInferInput().GetDate()
 	// https://github.com/tradingAI/tbase/blob/21a72ee53b7b7c2c1a976d8e1c2a6d858de64564/Dockerfile#L12
 	cmds = append(cmds, "cd /root/trade/tbase")
-	modelDir := path.Join(DEFAULT_TBASE_MODEL_DIR, id)
-	inferDir := path.Join(DEFAULT_TBASE_INFER_DIR, id)
+	modelDir := path.Join(MODEL_DIR, id)
+	inferDir := path.Join(INFER_DIR, id)
 	// tbase会读取model中的meta 版本信息，自动checkout到相应版本运行程序
 	runCmd := fmt.Sprintf("python -m trunner.tbase --infer --model_dir %s --infer_result_path %s --infer_date %s",
 		modelDir, inferDir, inferDate)

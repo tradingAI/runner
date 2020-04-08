@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"strconv"
-	"path"
 
 	"github.com/golang/glog"
 	minio "github.com/tradingAI/go/s3/minio"
@@ -59,11 +58,6 @@ func LoadConf() (conf Conf, err error) {
 		JobLogDir:        os.Getenv("JOB_LOG_DIR"),
 		JobShellDir:      os.Getenv("JOB_SHELL_DIR"),
 		TushareToken:     os.Getenv("TUSHARE_TOKEN"),
-		ModelDir:         path.Join(DATA_ROOT, "model"),
-		ProgressBarDir:   path.Join(DATA_ROOT, "progress_bar"),
-		TensorboardDir:   path.Join(DATA_ROOT, "tensorboard"),
-		InferDir:         path.Join(DATA_ROOT, "inferences"),
-		EvalDir:          path.Join(DATA_ROOT, "evals"),
 	}
 
 	if err = conf.Validate(); err != nil {
