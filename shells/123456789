@@ -1,5 +1,0 @@
-cd /root/trade/tenvs && git pull
-git checkout -b v1.0.8 && pip install -e .
-cd /root/trade/tbase && git pull
-git checkout -b v0.1.8 && pip install -e .
-python -m trunner.tbase --alg ddpg --model_dir models --progress_bar_path progress_bars/123456789 --tensorboard_dir tensorboards
