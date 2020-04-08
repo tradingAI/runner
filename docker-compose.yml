@@ -17,7 +17,7 @@ services:
       RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
-      - $RUNNER_DATA_DIR:$RUNNER_DATA_DIR:rw
+      - {RUNNER_DATA_DIR}:$RUNNER_DATA_DIR}:rw
 
   minio:
     image: minio/minio:latest
