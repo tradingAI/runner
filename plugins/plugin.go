@@ -6,6 +6,6 @@ import (
 
 type Plugin struct{}
 
-func (p *Plugin) GenerateCmds(input *pb.JobInput) (cmds []string, err error) {
+func (p *Plugin) GenerateCmds(input *pb.JobInput, id string) (cmds []string, err error) {
 	return
 }

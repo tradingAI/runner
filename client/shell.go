@@ -15,23 +15,24 @@ func (c *Client) getCmd(shellPath string) (cmd []string) {
 	return []string{"sh", shellPath}
 }
 
-func (c *Client) createShellFile(job *pb.Job) (shellFilePath string) {
+func (c *Client) createShellFile(job *pb.Job) (err error){
 	if _, err := os.Stat(c.Conf.JobShellDir); os.IsNotExist(err) {
 		err = os.MkdirAll(c.Conf.JobShellDir, 0755)
 		if err != nil {
 			glog.Error(err)
-			return
+			return err
 		}
 	}
-	shellFileName := strconv.FormatUint(job.Id, 10) + ".sh"
-	shellFilePath = path.Join(c.Conf.JobShellDir, shellFileName)
+	id := strconv.FormatUint(job.Id, 10)
+	shellFilePath := path.Join(c.Conf.JobShellDir, id)
+	glog.Info(shellFilePath)
 	f, err := os.OpenFile(shellFilePath, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	if err != nil {
 		glog.Error(err)
-		return
+		return err
 	}
 	p := &plugins.TbasePlugin{}
-	commands, err := p.GenerateCmds(job.Input)
+	commands, err := p.GenerateCmds(job.Input, id)
 	glog.Infof("GenerateCmds len %d", cap(commands))
 	if err != nil {
 		glog.Error(err)
