@@ -91,10 +91,10 @@ func (p *TbasePlugin) getInferJobCmds(input *pb.JobInput, id string) (cmds []str
 	// https://github.com/tradingAI/tbase/blob/21a72ee53b7b7c2c1a976d8e1c2a6d858de64564/Dockerfile#L12
 	cmds = append(cmds, "cd /root/trade/tbase")
 	modelDir := path.Join(MODEL_DIR, id)
-	inferDir := path.Join(INFER_DIR, id)
+	inferPath := path.Join(INFER_DIR, id)
 	// tbase会读取model中的meta 版本信息，自动checkout到相应版本运行程序
 	runCmd := fmt.Sprintf("python -m trunner.tbase --infer --model_dir %s --infer_result_path %s --infer_date %s",
-		modelDir, inferDir, inferDate)
+		modelDir, inferPath, inferDate)
 	cmds = append(cmds, runCmd)
 	return
 }
