@@ -13,6 +13,7 @@ import (
 	"docker.io/go-docker/api/types/container"
 	"github.com/golang/glog"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
+	"github.com/tradingAI/runner/plugins"
 )
 
 func (c *Client) CreateJob(job *pb.Job) (err error) {
@@ -31,7 +32,8 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	}
 	io.Copy(os.Stdout, reader)
 
-	err = c.createShellFile(job)
+	plugin := plugins.New(job)
+	err = c.createShellFile(job, plugin)
 	if err != nil {
 		glog.Error(err)
 		return
@@ -59,6 +61,7 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 		ID:      resp.ID,
 		ShortID: resp.ID[:12],
 		Job:     job,
+		Plugin:  plugin,
 	}
 
 	defer c.RemoveContainer(job.Id)

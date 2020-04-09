@@ -7,8 +7,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	conf, _ := LoadConf()
-	c, _ := New(conf)
+	c := creatTestClient()
 	assert.Equal(t, "test_runner_id", c.ID)
 	assert.Equal(t, "test_token", c.Token)
 }

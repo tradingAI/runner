@@ -8,14 +8,14 @@ import (
 
 	"github.com/golang/glog"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
-	plugins "github.com/tradingAI/runner/plugins"
+	"github.com/tradingAI/runner/plugins"
 )
 
 func (c *Client) getCmd(shellPath string) (cmd []string) {
 	return []string{"sh", shellPath}
 }
 
-func (c *Client) createShellFile(job *pb.Job) (err error) {
+func (c *Client) createShellFile(job *pb.Job, p plugins.Plugin) (err error) {
 	if _, err := os.Stat(c.Conf.JobShellDir); os.IsNotExist(err) {
 		err = os.MkdirAll(c.Conf.JobShellDir, 0755)
 		if err != nil {
@@ -30,7 +30,6 @@ func (c *Client) createShellFile(job *pb.Job) (err error) {
 		glog.Error(err)
 		return err
 	}
-	p := &plugins.TbasePlugin{}
 	commands, err := p.GenerateCmds(job.Input, id)
 	glog.Infof("GenerateCmds len %d", cap(commands))
 	if err != nil {
@@ -39,7 +38,6 @@ func (c *Client) createShellFile(job *pb.Job) (err error) {
 	}
 	for _, cmd := range commands {
 		line := fmt.Sprintf("%s\n", cmd)
-		// glog.Info(line)
 		f.Write([]byte(line))
 	}
 	f.Close()

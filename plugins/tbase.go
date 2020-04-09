@@ -10,7 +10,16 @@ import (
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
-type TbasePlugin struct{}
+type TbasePlugin struct {
+	Sep string
+}
+
+func NewTbasePlugin() (p *TbasePlugin) {
+	p = &TbasePlugin{
+		Sep: ",",
+	}
+	return
+}
 
 func (p *TbasePlugin) GenerateCmds(input *pb.JobInput, id string) (cmds []string, err error) {
 	switch input.GetInput().(type) {

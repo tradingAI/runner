@@ -16,8 +16,11 @@ var TENSORBOARD_DIR = path.Join(ROOT_DATA_DIR, "tensorboards")
 var INFER_DIR = path.Join(ROOT_DATA_DIR, "infers")
 var EVAL_DIR = path.Join(ROOT_DATA_DIR, "evals")
 
-type Plugin struct{}
+type Plugin interface {
+	GenerateCmds(input *pb.JobInput, id string) (cmds []string, err error)
+	ParseBar(encode string) (currentStep uint32, totalSteps uint32, err error)
+}
 
-func (p *Plugin) GenerateCmds(input *pb.JobInput, id string) (cmds []string, err error) {
-	return
+func New(job *pb.Job) (p Plugin) {
+	return NewTbasePlugin()
 }

@@ -10,13 +10,6 @@ import (
 	"github.com/tradingAI/runner/plugins"
 )
 
-type Container struct {
-	Name    string
-	ID      string
-	ShortID string
-	Job     *pb.Job
-}
-
 type Client struct {
 	Conf       Conf
 	Minio      *minio.Client
@@ -70,6 +63,7 @@ func (c *Client) Free() {
 
 func (c *Client) Heartbeat() (err error) {
 	glog.Infof("runner[%s] heartbeat", c.ID)
+	c.refreshBars()
 	// TODO: collect machine info call rpc hearbeat
 	return
 }
