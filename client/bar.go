@@ -2,7 +2,6 @@ package client
 
 import (
 	"io/ioutil"
-	"log"
 	"path"
 	"strconv"
 
@@ -11,7 +10,9 @@ import (
 
 func (c *Client) refreshBars() (err error) {
 	for _, container := range c.Containers {
-		err = c.refreshBar(container)
+		id := strconv.FormatUint(container.Job.Id, 10)
+		barPath := path.Join(c.Conf.ProgressBarDir, id)
+		err = container.refreshBar(barPath)
 		if err != nil {
 			glog.Error(err)
 			return
@@ -20,17 +21,15 @@ func (c *Client) refreshBars() (err error) {
 	return
 }
 
-func (c *Client) refreshBar(ct Container) (err error) {
-	id := strconv.FormatUint(ct.Job.Id, 10)
-	barPath := path.Join(c.Conf.ProgressBarDir, id)
+func (ct *Container) refreshBar(barPath string) (err error) {
 	content, err := ioutil.ReadFile(barPath)
 	if err != nil {
-		log.Fatal(err)
+		glog.Error(err)
 	}
 	encode := string(content)
 	currentStep, totalSteps, err := ct.Plugin.ParseBar(encode)
 	if err != nil {
-		log.Fatal(err)
+		glog.Error(err)
 	}
 	ct.Job.CurrentStep = currentStep
 	ct.Job.TotalSteps = totalSteps
