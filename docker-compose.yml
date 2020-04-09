@@ -13,10 +13,10 @@ services:
       RUNNER_MINIO_PORT: ${RUNNER_MINIO_PORT}
       RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
       HEARTBEAT_SECONDS: 10
-      RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
+      RUNNER_DATA_DIR: /root/runner/data
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
-      - ${RUNNER_DATA_DIR}:${RUNNER_DATA_DIR}:rw
+      - /root/runner/data/:/root/runner/data/:rw
 
   minio:
     image: minio/minio:latest
