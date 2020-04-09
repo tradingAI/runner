@@ -12,7 +12,7 @@ update:
 	go mod tidy
 
 test:
-	go test -v ./...
+	go test ./...
 
 docker_test:
 	docker-compose up test

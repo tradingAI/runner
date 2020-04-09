@@ -15,6 +15,7 @@ type Container struct {
 	ID      string
 	ShortID string
 	Job     *pb.Job
+	Plugin  plugins.Plugin
 }
 
 type Client struct {

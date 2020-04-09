@@ -19,7 +19,7 @@ func TestGetInstallTbaseRepoCmds(t *testing.T) {
 }
 
 func TestTbaseGenerateTrainCmds(t *testing.T) {
-	p := &TbasePlugin{}
+	p := NewTbasePlugin()
 	input := CreateDefaultTbaseTrainJobInput()
 	actual, _ := p.GenerateCmds(input, "0")
 	runCmd := fmt.Sprintf("python -m trunner.tbase --alg ddpg --model_dir %smodels --progress_bar_path %sprogress_bars/0 --tensorboard_dir %stensorboards",
@@ -35,7 +35,7 @@ func TestTbaseGenerateTrainCmds(t *testing.T) {
 }
 
 func TestTbaseGenerateEvalCmds(t *testing.T) {
-	p := &TbasePlugin{}
+	p := NewTbasePlugin()
 	input := CreateDefaultTbaseEvalJobInput()
 	actual, _ := p.GenerateCmds(input, "0")
 	runCmd := fmt.Sprintf("python -m trunner.tbase --eval --model_dir %smodels/0 --eval_result_path %sevals/0 --eval_start 20190101 --eval_end 20200101",
@@ -48,7 +48,7 @@ func TestTbaseGenerateEvalCmds(t *testing.T) {
 }
 
 func TestTbaseGenerateInferCmds(t *testing.T) {
-	p := &TbasePlugin{}
+	p := NewTbasePlugin()
 	input := CreateDefaultTbaseInferJobInput()
 	actual, _ := p.GenerateCmds(input, "0")
 	runCmd := fmt.Sprintf("python -m trunner.tbase --infer --model_dir %smodels/0 --infer_result_path %sinfers/0 --infer_date 20200101",
