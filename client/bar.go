@@ -25,11 +25,13 @@ func (ct *Container) refreshBar(barPath string) (err error) {
 	content, err := ioutil.ReadFile(barPath)
 	if err != nil {
 		glog.Error(err)
+		return
 	}
 	encode := string(content)
 	currentStep, totalSteps, err := ct.Plugin.ParseBar(encode)
 	if err != nil {
 		glog.Error(err)
+		return
 	}
 	ct.Job.CurrentStep = currentStep
 	ct.Job.TotalSteps = totalSteps
