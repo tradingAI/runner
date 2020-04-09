@@ -22,14 +22,14 @@ func run() {
 	}
 
 	// new runner
-	c, err := runner.New(conf)
+	r, err := runner.New(conf)
 	if err != nil {
 		glog.Fatal(err)
 	}
-	defer c.Free()
+	defer r.Free()
 
 	// start runner
-	err = c.StartOrDie()
+	err = r.StartOrDie()
 	if err != nil {
 		glog.Fatal(err)
 	}
