@@ -1,4 +1,4 @@
-package client
+package runner
 
 import (
 	"bufio"
@@ -12,15 +12,15 @@ import (
 	"github.com/golang/glog"
 )
 
-func (c *Client) createLogFile(id string) (logFilePath string) {
-	if _, err := os.Stat(c.Conf.JobLogDir); os.IsNotExist(err) {
-		err = os.MkdirAll(c.Conf.JobLogDir, 0755)
+func (r *Runner) createLogFile(id string) (logFilePath string) {
+	if _, err := os.Stat(r.Conf.JobLogDir); os.IsNotExist(err) {
+		err = os.MkdirAll(r.Conf.JobLogDir, 0755)
 		if err != nil {
 			glog.Error(err)
 		}
 	}
 	logFileName := fmt.Sprintf("%s.log", id)
-	logFilePath = path.Join(c.Conf.JobLogDir, logFileName)
+	logFilePath = path.Join(r.Conf.JobLogDir, logFileName)
 	f, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		glog.Error(err)

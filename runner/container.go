@@ -1,4 +1,4 @@
-package client
+package runner
 
 import (
 	pb "github.com/tradingAI/proto/gen/go/scheduler"

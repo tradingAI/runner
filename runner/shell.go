@@ -1,4 +1,4 @@
-package client
+package runner
 
 import (
 	"fmt"
@@ -11,20 +11,20 @@ import (
 	"github.com/tradingAI/runner/plugins"
 )
 
-func (c *Client) getCmd(shellPath string) (cmd []string) {
+func (r *Runner) getCmd(shellPath string) (cmd []string) {
 	return []string{"sh", shellPath}
 }
 
-func (c *Client) createShellFile(job *pb.Job, p plugins.Plugin) (err error) {
-	if _, err := os.Stat(c.Conf.JobShellDir); os.IsNotExist(err) {
-		err = os.MkdirAll(c.Conf.JobShellDir, 0755)
+func (r *Runner) createShellFile(job *pb.Job, p plugins.Plugin) (err error) {
+	if _, err := os.Stat(r.Conf.JobShellDir); os.IsNotExist(err) {
+		err = os.MkdirAll(r.Conf.JobShellDir, 0755)
 		if err != nil {
 			glog.Error(err)
 			return err
 		}
 	}
 	id := strconv.FormatUint(job.Id, 10)
-	shellFilePath := path.Join(c.Conf.JobShellDir, id)
+	shellFilePath := path.Join(r.Conf.JobShellDir, id)
 	f, err := os.OpenFile(shellFilePath, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
 	if err != nil {
 		glog.Error(err)

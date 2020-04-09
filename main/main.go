@@ -4,31 +4,31 @@ import (
 	"flag"
 
 	"github.com/golang/glog"
-	"github.com/tradingAI/runner/client"
+	"github.com/tradingAI/runner/runner"
 )
 
 func main() {
 	flag.Parse()
 	flag.Set("logtostderr", "true")
 
-	runClient()
+	run()
 }
 
-func runClient() {
+func run() {
 	// load config
-	conf, err := client.LoadConf()
+	conf, err := runner.LoadConf()
 	if err != nil {
 		glog.Fatal(err)
 	}
 
-	// new client
-	c, err := client.New(conf)
+	// new runner
+	c, err := runner.New(conf)
 	if err != nil {
 		glog.Fatal(err)
 	}
 	defer c.Free()
 
-	// start client
+	// start runner
 	err = c.StartOrDie()
 	if err != nil {
 		glog.Fatal(err)

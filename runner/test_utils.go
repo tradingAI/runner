@@ -1,4 +1,4 @@
-package client
+package runner
 
 import (
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
@@ -6,9 +6,9 @@ import (
 )
 
 
-func creatTestClient() (c *Client) {
+func creatTestRunner() (r *Runner) {
     conf, _ := LoadConf()
-	c, _ = New(conf)
+	r, _ = New(conf)
     return
 }
 

@@ -1,4 +1,4 @@
-package client
+package runner
 
 import (
 	"context"
@@ -16,8 +16,8 @@ import (
 	"github.com/tradingAI/runner/plugins"
 )
 
-func (c *Client) CreateJob(job *pb.Job) (err error) {
-	glog.Infof("runner %s creating job %d", c.ID, job.Id)
+func (r *Runner) CreateJob(job *pb.Job) (err error) {
+	glog.Infof("runner %s creating job %d", r.ID, job.Id)
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
@@ -33,30 +33,30 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 	io.Copy(os.Stdout, reader)
 
 	plugin := plugins.New(job)
-	err = c.createShellFile(job, plugin)
+	err = r.createShellFile(job, plugin)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 	jobIdStr := strconv.FormatUint(job.Id, 10)
-	logFilePath := c.createLogFile(jobIdStr)
+	logFilePath := r.createLogFile(jobIdStr)
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image:        DEFAULT_IMAGE,
-		Cmd:          c.getCmd(path.Join(c.Conf.JobShellDir, jobIdStr)),
-		Env:          []string{fmt.Sprintf("TUSHARE_TOKEN=%s", c.Conf.TushareToken)},
+		Cmd:          r.getCmd(path.Join(r.Conf.JobShellDir, jobIdStr)),
+		Env:          []string{fmt.Sprintf("TUSHARE_TOKEN=%s", r.Conf.TushareToken)},
 		Tty:          true,
 		AttachStdout: true,
 		AttachStderr: true,
 	}, &container.HostConfig{
-		Mounts: c.getTbaseMounts(jobIdStr),
+		Mounts: r.getTbaseMounts(jobIdStr),
 	}, nil, jobIdStr)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 
-	c.Containers[job.Id] = Container{
+	r.Containers[job.Id] = Container{
 		Name:    strconv.FormatUint(job.Id, 10),
 		ID:      resp.ID,
 		ShortID: resp.ID[:12],
@@ -64,9 +64,9 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 		Plugin:  plugin,
 	}
 
-	defer c.RemoveContainer(job.Id)
+	defer r.RemoveContainer(job.Id)
 
-	glog.Infof("runner %s created job %d, container id: %s", c.ID, job.Id, resp.ID)
+	glog.Infof("runner %s created job %d, container id: %s", r.ID, job.Id, resp.ID)
 
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		glog.Error(err)
@@ -85,29 +85,29 @@ func (c *Client) CreateJob(job *pb.Job) (err error) {
 			return err
 		}
 	case <-statusCh:
-		glog.Infof("runner %s completed job %d, container id: %s", c.ID, job.Id, resp.ID)
-		// c.RemoveContainer(job.Id)
+		glog.Infof("runner %s completed job %d, container id: %s", r.ID, job.Id, resp.ID)
+		// r.RemoveContainer(job.Id)
 		ch <- 1
 	}
 	<-ch
 	return
 }
 
-func (c *Client) StopJob(id uint64) (err error) {
+func (r *Runner) StopJob(id uint64) (err error) {
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
 		glog.Error(err)
 		return
 	}
-	container_id := c.Containers[id].ShortID
-	glog.Infof("runner %s stopping job %d, container id: %s", c.ID, id, container_id)
+	container_id := r.Containers[id].ShortID
+	glog.Infof("runner %s stopping job %d, container id: %s", r.ID, id, container_id)
 	if err := cli.ContainerStop(ctx, container_id, nil); err != nil {
 		glog.Error(err)
 		return err
 	}
-	glog.Infof("runner %s stopped job %d, container id: %s", c.ID, id, container_id)
-	err = c.RemoveContainer(id)
+	glog.Infof("runner %s stopped job %d, container id: %s", r.ID, id, container_id)
+	err = r.RemoveContainer(id)
 	if err != nil {
 		glog.Error(err)
 		return err
@@ -115,7 +115,7 @@ func (c *Client) StopJob(id uint64) (err error) {
 	return
 }
 
-func (c *Client) RemoveContainer(id uint64) (err error) {
+func (r *Runner) RemoveContainer(id uint64) (err error) {
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
@@ -123,12 +123,12 @@ func (c *Client) RemoveContainer(id uint64) (err error) {
 		return
 	}
 	// remove container
-	container_id := c.Containers[id].ShortID
-	glog.Infof("runner %s removing container id: %s, job id %d", c.ID, container_id, id)
+	container_id := r.Containers[id].ShortID
+	glog.Infof("runner %s removing container id: %s, job id %d", r.ID, container_id, id)
 	if err := cli.ContainerRemove(ctx, container_id, types.ContainerRemoveOptions{}); err != nil {
 		glog.Error(err)
 		return err
 	}
-	glog.Infof("runner %s removed container id: %s, job %d", c.ID, container_id, id)
+	glog.Infof("runner %s removed container id: %s, job %d", r.ID, container_id, id)
 	return
 }
