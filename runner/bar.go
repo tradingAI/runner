@@ -1,4 +1,4 @@
-package client
+package runner
 
 import (
 	"io/ioutil"
@@ -8,10 +8,10 @@ import (
 	"github.com/golang/glog"
 )
 
-func (c *Client) refreshBars() (err error) {
-	for _, container := range c.Containers {
+func (r *Runner) refreshBars() (err error) {
+	for _, container := range r.Containers {
 		id := strconv.FormatUint(container.Job.Id, 10)
-		barPath := path.Join(c.Conf.ProgressBarDir, id)
+		barPath := path.Join(r.Conf.ProgressBarDir, id)
 		err = container.refreshBar(barPath)
 		if err != nil {
 			glog.Error(err)

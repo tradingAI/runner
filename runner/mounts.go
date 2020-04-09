@@ -1,4 +1,4 @@
-package client
+package runner
 
 import (
 	"path"
@@ -7,19 +7,19 @@ import (
 	"github.com/tradingAI/runner/plugins"
 )
 
-func (c *Client) getTbaseMounts(id string) (mounts []mount.Mount) {
+func (r *Runner) getTbaseMounts(id string) (mounts []mount.Mount) {
 	mounts = []mount.Mount{
-		c.getTbaseShellMount(id),
-		c.getTbaseModelMount(id),
-		c.getTbaseProgressBarMount(id),
-		c.getTbaseTensorboardMount(id),
-		c.getTbaseInferMount(id),
-		c.getTbaseEvalMount(id),
+		r.getTbaseShellMount(id),
+		r.getTbaseModelMount(id),
+		r.getTbaseProgressBarMount(id),
+		r.getTbaseTensorboardMount(id),
+		r.getTbaseInferMount(id),
+		r.getTbaseEvalMount(id),
 	}
 	return mounts
 }
 
-func (c *Client) getTbaseShellMount(id string) (m mount.Mount) {
+func (r *Runner) getTbaseShellMount(id string) (m mount.Mount) {
 	mustCreateDir(plugins.JOB_SHELL_DIR)
 	return mount.Mount{
 		Type:   mount.TypeBind,
@@ -28,7 +28,7 @@ func (c *Client) getTbaseShellMount(id string) (m mount.Mount) {
 	}
 }
 
-func (c *Client) getTbaseModelMount(id string) (m mount.Mount) {
+func (r *Runner) getTbaseModelMount(id string) (m mount.Mount) {
 	dir := path.Join(plugins.MODEL_DIR, id)
 	mustCreateDir(dir)
 	return mount.Mount{
@@ -38,7 +38,7 @@ func (c *Client) getTbaseModelMount(id string) (m mount.Mount) {
 	}
 }
 
-func (c *Client) getTbaseProgressBarMount(id string) (m mount.Mount) {
+func (r *Runner) getTbaseProgressBarMount(id string) (m mount.Mount) {
 	mustCreateDir(plugins.PROGRESS_BAR_DIR)
 	return mount.Mount{
 		Type:   mount.TypeBind,
@@ -47,8 +47,8 @@ func (c *Client) getTbaseProgressBarMount(id string) (m mount.Mount) {
 	}
 }
 
-func (c *Client) getTbaseTensorboardMount(id string) (m mount.Mount) {
-	dir := path.Join(c.Conf.TensorboardDir, id)
+func (r *Runner) getTbaseTensorboardMount(id string) (m mount.Mount) {
+	dir := path.Join(r.Conf.TensorboardDir, id)
 	mustCreateDir(dir)
 	return mount.Mount{
 		Type:   mount.TypeBind,
@@ -57,7 +57,7 @@ func (c *Client) getTbaseTensorboardMount(id string) (m mount.Mount) {
 	}
 }
 
-func (c *Client) getTbaseInferMount(id string) (m mount.Mount) {
+func (r *Runner) getTbaseInferMount(id string) (m mount.Mount) {
 	mustCreateDir(plugins.INFER_DIR)
 	return mount.Mount{
 		Type:   mount.TypeBind,
@@ -66,8 +66,8 @@ func (c *Client) getTbaseInferMount(id string) (m mount.Mount) {
 	}
 }
 
-func (c *Client) getTbaseEvalMount(id string) (m mount.Mount) {
-	mustCreateDir(c.Conf.EvalDir)
+func (r *Runner) getTbaseEvalMount(id string) (m mount.Mount) {
+	mustCreateDir(r.Conf.EvalDir)
 	return mount.Mount{
 		Type:   mount.TypeBind,
 		Source: plugins.EVAL_DIR,

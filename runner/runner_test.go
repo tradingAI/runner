@@ -1,4 +1,4 @@
-package client
+package runner
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	c := creatTestClient()
+	c := creatTestRunner()
 	assert.Equal(t, "test_runner_id", c.ID)
 	assert.Equal(t, "test_token", c.Token)
 }
