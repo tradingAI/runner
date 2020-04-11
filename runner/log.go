@@ -35,6 +35,7 @@ func writeLog(containerId string, filePath string) (err error) {
 	cli, err := docker.NewEnvClient()
 	if err != nil {
 		glog.Error(err)
+		return
 	}
 
 	reader, err := cli.ContainerLogs(ctx, containerId, types.ContainerLogsOptions{
@@ -45,10 +46,12 @@ func writeLog(containerId string, filePath string) (err error) {
 	})
 	if err != nil {
 		glog.Error(err)
+		return
 	}
 	defer func() {
 		if errClose := reader.Close(); errClose != nil {
 			glog.Error(errClose)
+			return
 		}
 	}()
 
@@ -63,11 +66,13 @@ func writeLog(containerId string, filePath string) (err error) {
 	for scanner.Scan() {
 		_, err = f.Write([]byte(scanner.Text() + "\n"))
 		if err != nil {
+			glog.Error(err)
 			break
 		}
 	}
 	if err != nil {
 		glog.Error(err)
+		return
 	}
 
 	return
