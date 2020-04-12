@@ -1,7 +1,6 @@
 package runner
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,16 +8,18 @@ import (
 
 func TestArchive(t *testing.T) {
 	testDir := "testdata/achive"
-	err := Archive(testDir)
-	destPath := fmt.Sprintf("%s.%s", testDir, ARCHIVE_EXT)
-	defer DeleteFile(destPath)
+	destPath, err := Archive(testDir)
+	assert.Nil(t, err)
+	assert.Equal(t, "testdata/achive.zip", destPath)
+	err = DeleteFile(destPath)
 	assert.Nil(t, err)
 }
 
 
 func TestUnarchive(t *testing.T) {
 	testPath := "testdata/unachive.zip"
-	err := Unarchive(testPath)
-	defer DeleteDirectory("testdata/unachive")
+	dir, err := Unarchive(testPath)
 	assert.Nil(t, err)
+	assert.Equal(t, "testdata/unachive", dir)
+	DeleteDirectory("testdata/unachive")
 }

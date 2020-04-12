@@ -25,7 +25,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/stretchr/testify v1.5.1
-	github.com/tradingAI/go v0.0.0-20200407065521-4e64a54b69c1
+	github.com/tradingAI/go v0.0.0-20200407083512-47d792fe9d15
 	github.com/tradingAI/proto/gen/go/common v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000

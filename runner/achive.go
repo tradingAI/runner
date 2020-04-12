@@ -13,8 +13,8 @@ import (
 const ARCHIVE_EXT = "zip"
 
 // NOTE(wen): 打包使用zip格式压缩
-func Archive(srcDir string) (err error) {
-	destPath := fmt.Sprintf("%s.%s", srcDir, ARCHIVE_EXT)
+func Archive(srcDir string) (destPath string, err error) {
+	destPath = fmt.Sprintf("%s.%s", srcDir, ARCHIVE_EXT)
 	err = archiver.Archive([]string{srcDir}, destPath)
 	if err != nil {
 		glog.Error(err)
@@ -24,10 +24,10 @@ func Archive(srcDir string) (err error) {
 }
 
 // NOTE(wen): 解压时按照文件名的扩展名的格式来判断文件格式
-func Unarchive(srcPath string) (err error) {
+func Unarchive(srcPath string) (destDir string, err error) {
 	fileDir, fileName := path.Split(srcPath)
 	dirName := strings.Split(fileName, ".")[0]
-	destDir := path.Join(fileDir, dirName)
+	destDir = path.Join(fileDir, dirName)
 	err = archiver.Unarchive(srcPath, destDir)
 	if err != nil {
 		glog.Error(err)

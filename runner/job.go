@@ -64,8 +64,6 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 		Plugin:  plugin,
 	}
 
-	defer r.RemoveContainer(job.Id)
-
 	glog.Infof("runner %s created job %d, container id: %s", r.ID, job.Id, resp.ID)
 
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
@@ -90,6 +88,7 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 		ch <- 1
 	}
 	<-ch
+	r.RemoveContainer(job.Id)
 	return
 }
 
