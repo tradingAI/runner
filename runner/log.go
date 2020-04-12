@@ -67,7 +67,7 @@ func writeLog(containerId string, filePath string) (err error) {
 		_, err = f.Write([]byte(scanner.Text() + "\n"))
 		if err != nil {
 			glog.Error(err)
-			break
+			continue
 		}
 	}
 	if err != nil {
