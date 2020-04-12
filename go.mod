@@ -22,7 +22,7 @@ require (
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/mholt/archiver/v3 v3.3.0
-	github.com/minio/minio-go/v6 v6.0.52 // indirect
+	github.com/minio/minio-go/v6 v6.0.52
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
