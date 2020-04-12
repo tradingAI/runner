@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"github.com/golang/glog"
-	minio "github.com/tradingAI/go/s3/minio"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 
 	"path"
@@ -33,7 +32,7 @@ func (r *Runner) uploadTrainModel(job *pb.Job) (err error) {
 	}
     bucket := trainInput.GetBucket()
 	objName := path.Join(trainInput.GetModelFileDir(), filepath.Base(modelPath))
-	err = minio.MinioUpload(r.Minio, bucket, modelPath, objName, UPLOAD_CONTENT_TYPE)
+	err = r.Minio.MinioUpload(bucket, modelPath, objName, UPLOAD_CONTENT_TYPE)
 	if err != nil {
 		glog.Error(err)
 		return err
@@ -60,7 +59,7 @@ func (r *Runner) uploadTensorboard(job *pb.Job) (err error) {
 	}
     bucket := trainInput.GetBucket()
 	objName := path.Join(trainInput.GetTensorboardFileDir(), filepath.Base(tbPath))
-	err = minio.MinioUpload(r.Minio, bucket, tbPath, objName, UPLOAD_CONTENT_TYPE)
+	err = r.Minio.MinioUpload(bucket, tbPath, objName, UPLOAD_CONTENT_TYPE)
 	if err != nil {
 		glog.Error(err)
 		return err
