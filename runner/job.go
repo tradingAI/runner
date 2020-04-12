@@ -84,7 +84,19 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 		}
 	case <-statusCh:
 		glog.Infof("runner %s completed job %d, container id: %s", r.ID, job.Id, resp.ID)
-		// r.RemoveContainer(job.Id)
+		err = r.uploadTrainModel(job)
+		if err != nil {
+			glog.Error(err)
+			r.FailJob(job)
+			return
+		}
+		r.uploadTensorboard(job)
+		if err != nil {
+			glog.Error(err)
+			r.FailJob(job)
+			return
+		}
+
 		ch <- 1
 	}
 	<-ch
@@ -130,4 +142,12 @@ func (r *Runner) RemoveContainer(id uint64) (err error) {
 	}
 	glog.Infof("runner %s removed container id: %s, job %d", r.ID, container_id, id)
 	return
+}
+
+func (r *Runner) CleanJob(job *pb.Job) (err error) {
+	// clean model
+	// clean tensorboard
+	// clean log
+	// clean eval
+	// clean infer
 }
