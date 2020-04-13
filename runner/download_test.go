@@ -14,6 +14,7 @@ func TestDownloadAndUnarchiveModel(t *testing.T) {
 	modelDir, err := r.downloadAndUnarchiveModel(trainJob)
 	assert.NotNil(t, err)
 	assert.Equal(t, "", modelDir)
+	DeleteFile(path.Join(r.Conf.ModelDir, "22222.zip"))
 	// eval job
 	// upload test model for test
 	err = r.uploadTrainModel(trainJob)

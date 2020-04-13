@@ -17,9 +17,10 @@ func TestArchive(t *testing.T) {
 
 
 func TestUnarchive(t *testing.T) {
-	testPath := "testdata/unachive.zip"
-	dir, err := Unarchive(testPath)
+	srcPath := "testdata/unachive.zip"
+	destDir := "testdata/unachive"
+	err := Unarchive(srcPath, destDir)
 	assert.Nil(t, err)
-	assert.Equal(t, "testdata/unachive", dir)
-	DeleteDirectory("testdata/unachive")
+	err = DeleteDirectory(destDir)
+	assert.Nil(t, err)
 }

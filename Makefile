@@ -13,12 +13,15 @@ update:
 	go mod tidy
 
 test:
-	rm -rf /tmp/runner/minio/data/*
+	rm -rf /tmp/runner/data/models/*
+	rm -rf /tmp/runner/data/tensorboards/*
+	cp -R ./runner/testdata/upload/model/* /tmp/runner/data/models/
+	cp -R ./runner/testdata/upload/tensorboard/* /tmp/runner/data/tensorboards/
 	go test ./...
 
 # docker test
 dtest:
-	docker-compose down
+	# docker-compose down
 	rm -rf /tmp/runner/minio/data/*
 	docker-compose up test
 

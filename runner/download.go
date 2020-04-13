@@ -95,8 +95,11 @@ func (r *Runner) downloadAndUnarchiveModel(job *pb.Job) (modelDir string, err er
 		glog.Error(err)
 		return
 	}
+	defer DeleteFile(modelPath)
 	// unarchive model
-	modelDir, err = Unarchive(modelPath)
+	id := strconv.FormatUint(job.Id, 10)
+	modelDir = path.Join(r.Conf.ModelDir, id)
+	err = Unarchive(modelPath, modelDir)
 	if err != nil {
 		glog.Error(err)
 		return

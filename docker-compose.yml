@@ -20,7 +20,7 @@ services:
       - .:/go/src/github.com/tradingAI/runner/
       - ./runner/testdata/upload/model/:/root/runner/data/models/
       - ./runner/testdata/upload/tensorboard/:/root/runner/data/tensorboards/
-      - /tmp/runner/data/:/root/runner/data/:rw
+      # - /tmp/runner/data/:/root/runner/data/:rw
 
   minio:
     image: minio/minio:latest
