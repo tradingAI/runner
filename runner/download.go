@@ -3,6 +3,8 @@ package runner
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"strconv"
 
 	"path"
@@ -99,8 +101,40 @@ func (r *Runner) downloadAndUnarchiveModel(job *pb.Job) (modelDir string, err er
 	// unarchive model
 	id := strconv.FormatUint(job.Id, 10)
 	modelDir = path.Join(r.Conf.ModelDir, id)
-	err = Unarchive(modelPath, modelDir)
+	tmpDir := path.Join(r.Conf.ModelDir, id + "_tmp")
+	err = Unarchive(modelPath, tmpDir)
 	if err != nil {
+		glog.Error(err)
+		return
+	}
+	defer DeleteDirectory(tmpDir)
+	OriginModelDir, err := getOriginModelDir(tmpDir)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+	err = os.Rename(OriginModelDir, modelDir)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+	return
+}
+
+func getOriginModelDir(srcDir string) (dir string, err error) {
+	dirs, err := ioutil.ReadDir(srcDir)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+	if cap(dirs) != 1{
+		err = errors.New("runner getOriginModelDir: model file is invalid, only 1 directory is allowed")
+		glog.Error(err)
+		return
+	}
+	dir = path.Join(srcDir, dirs[0].Name())
+	if !dirs[0].IsDir() {
+		err = errors.New("runner getOriginModelDir: model file is invalid, only 1 directory is allowed")
 		glog.Error(err)
 		return
 	}

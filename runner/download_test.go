@@ -32,6 +32,6 @@ func TestDownloadAndUnarchiveModel(t *testing.T) {
 	assert.Nil(t, err)
 	expectedDir = path.Join(r.Conf.ModelDir, "4")
 	assert.Equal(t, expectedDir, modelDir)
-	DeleteDirectory(modelDir)
+	// DeleteDirectory(modelDir)
 	DeleteFile(path.Join(r.Conf.ModelDir, "4.zip"))
 }
