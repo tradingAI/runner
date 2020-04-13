@@ -101,7 +101,7 @@ func (r *Runner) downloadAndUnarchiveModel(job *pb.Job) (modelDir string, err er
 	// unarchive model
 	id := strconv.FormatUint(job.Id, 10)
 	modelDir = path.Join(r.Conf.ModelDir, id)
-	tmpDir := path.Join(r.Conf.ModelDir, id + "_tmp")
+	tmpDir := path.Join(r.Conf.ModelDir, id+"_tmp")
 	err = Unarchive(modelPath, tmpDir)
 	if err != nil {
 		glog.Error(err)
@@ -128,7 +128,7 @@ func getOriginModelDir(srcDir string) (dir string, err error) {
 		glog.Error(err)
 		return
 	}
-	if cap(dirs) != 1{
+	if cap(dirs) != 1 {
 		err = errors.New("runner getOriginModelDir: model file is invalid, only 1 directory is allowed")
 		glog.Error(err)
 		return
