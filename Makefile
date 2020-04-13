@@ -1,4 +1,4 @@
-.PHONY: install update run proto down test dtest build_linux build_darwin prod
+.PHONY: install update run proto down clean test vtest dtest build_linux build_darwin prod
 
 install:
 	go mod init
@@ -20,7 +20,6 @@ clean:
 
 test: clean
 	go test ./...
-
 
 vtest: clean
 	go test -v ./...
