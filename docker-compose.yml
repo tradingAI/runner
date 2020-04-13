@@ -6,26 +6,30 @@ services:
     command:
       /bin/bash /go/src/github.com/tradingAI/runner/docker-compose.sh
     environment:
-      TUSHARE_TOKEN: ${TUSHARE_TOKEN}
+      TUSHARE_TOKEN: test_token
       RUNNER_MINIO_ACCESS_KEY: ${RUNNER_MINIO_ACCESS_KEY}
       RUNNER_MINIO_SECRET_KEY: ${RUNNER_MINIO_SECRET_KEY}
-      RUNNER_MINIO_HOST: ${RUNNER_MINIO_HOST}
-      RUNNER_MINIO_PORT: ${RUNNER_MINIO_PORT}
-      RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
+      RUNNER_MINIO_HOST: minio
+      RUNNER_MINIO_PORT: 9000
+      RUNNER_MINIO_SECURE: 'false'
       HEARTBEAT_SECONDS: 10
       RUNNER_DATA_DIR: /root/runner/data/
+    depends_on:
+        - minio
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
-      - /root/runner/data/:/root/runner/data/:rw
+      - ./runner/testdata/upload/model/:/root/runner/data/models/
+      - ./runner/testdata/upload/tensorboard/:/root/runner/data/tensorboards/
+      # - /tmp/runner/data/:/root/runner/data/:rw
 
   minio:
     image: minio/minio:latest
     ports:
-      - ${RUNNER_MINIO_PORT}:9000
+      - 9000:9000
     environment:
       MINIO_ACCESS_KEY: ${RUNNER_MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${RUNNER_MINIO_SECRET_KEY}
-    container_name: RUNNER_MINIO
     volumes:
-      - /tmp/tweb/minio/data:/data
-    command: ["server", "/data"]
+      - /tmp/runner/minio/data:/tmp/runner/minio/data:rw
+    command:
+        server /tmp/runner/minio/data
