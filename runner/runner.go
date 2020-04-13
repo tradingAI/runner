@@ -4,15 +4,14 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"github.com/minio/minio-go/v6"
-	minio2 "github.com/tradingAI/go/s3/minio"
+	minio "github.com/tradingAI/go/s3/minio"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 	"github.com/tradingAI/runner/plugins"
 )
 
 type Runner struct {
 	Conf       Conf
-	Minio      *minio2.Client
+	Minio      *minio.Client
 	ID         string
 	Token      string
 	Containers map[uint64]Container // key: jobID, value: Container
@@ -26,7 +25,7 @@ func New(conf Conf) (r *Runner, err error) {
 		Token: "test_token",     // TODO: use evn token
 	}
 
-	r.Minio, err = minio2.NewMinioClient(r.Conf.Minio)
+	r.Minio, err = minio.NewMinioClient(r.Conf.Minio)
 	if err != nil {
 		glog.Error(err)
 		return

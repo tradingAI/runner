@@ -30,5 +30,6 @@ services:
       MINIO_ACCESS_KEY: ${RUNNER_MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${RUNNER_MINIO_SECRET_KEY}
     volumes:
-      - /tmp/runner/minio/data:/data:rw
-    command: ["server", "/data"]
+      - /tmp/runner/minio/data:/tmp/runner/minio/data:rw
+    command:
+        server /tmp/runner/minio/data

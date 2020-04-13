@@ -1,4 +1,4 @@
-.PHONY: install update run proto down test docker_test build_linux build_darwin prod
+.PHONY: install update run proto down test dtest build_linux build_darwin prod
 
 install:
 	go mod init
@@ -8,13 +8,18 @@ install:
 update:
 	go get -u -v google.golang.org/grpc
 	go get -u github.com/tradingAI/proto
+	go get -u github.com/tradingAI/go
 	bash proto.sh
 	go mod tidy
 
 test:
+	rm -rf /tmp/runner/minio/data/*
 	go test ./...
 
-docker_test:
+# docker test
+dtest:
+	docker-compose down
+	rm -rf /tmp/runner/minio/data/*
 	docker-compose up test
 
 run:

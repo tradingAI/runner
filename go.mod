@@ -12,6 +12,8 @@ replace github.com/tradingAI/proto/gen/go/scheduler => ../proto/gen/go/scheduler
 
 replace github.com/docker/docker/internal/testutil => gotest.tools/v3 v3.0.0
 
+// replace github.com/tradingAI/go => ../go
+
 require (
 	docker.io/go-docker v1.0.0
 	github.com/Microsoft/go-winio v0.4.14 // indirect
@@ -22,12 +24,11 @@ require (
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/mholt/archiver/v3 v3.3.0
-	github.com/minio/minio-go/v6 v6.0.52
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.5.1
-	github.com/tradingAI/go v0.0.0-20200412115225-3165b084d5f9
+	github.com/tradingAI/go v0.0.0-20200412172521-d675ba819c87
 	github.com/tradingAI/proto/gen/go/common v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000
