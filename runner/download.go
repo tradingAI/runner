@@ -121,6 +121,7 @@ func (r *Runner) downloadAndUnarchiveModel(job *pb.Job) (modelDir string, err er
 	return
 }
 
+// 从解压的目录中提取出源模型所在的目录
 func getOriginModelDir(srcDir string) (dir string, err error) {
 	dirs, err := ioutil.ReadDir(srcDir)
 	if err != nil {
