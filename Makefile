@@ -12,12 +12,18 @@ update:
 	bash proto.sh
 	go mod tidy
 
-test:
+clean:
 	rm -rf /tmp/runner/data/models/*
 	rm -rf /tmp/runner/data/tensorboards/*
 	cp -R ./runner/testdata/upload/model/* /tmp/runner/data/models/
 	cp -R ./runner/testdata/upload/tensorboard/* /tmp/runner/data/tensorboards/
+
+test: clean
 	go test ./...
+
+
+vtest: clean
+	go test -v ./...
 
 # docker test
 dtest:

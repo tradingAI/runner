@@ -17,6 +17,7 @@ replace github.com/docker/docker/internal/testutil => gotest.tools/v3 v3.0.0
 require (
 	docker.io/go-docker v1.0.0
 	github.com/Microsoft/go-winio v0.4.14 // indirect
+	github.com/NVIDIA/gpu-monitoring-tools v0.0.0-20200403082939-e5b04ac17c03
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker/internal/testutil v0.0.0-00010101000000-000000000000 // indirect
