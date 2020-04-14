@@ -17,7 +17,7 @@ type Runner struct {
 	Token           string
 	Containers      map[uint64]Container // key: jobID, value: Container
 	Machine         *Machine
-	schedulerClient *pb.SchedulerClient
+	schedulerClient pb.SchedulerClient
 	schedulerConn   *grpc.ClientConn
 	Status          pb.RunnerStatus
 }
@@ -42,6 +42,7 @@ func New(conf Conf) (r *Runner, err error) {
 		glog.Error(err)
 		return
 	}
+	r.Machine = machine
 	return
 }
 
@@ -70,7 +71,7 @@ func (r *Runner) Free() {
 }
 
 func (r *Runner) updateStatus() {
-	if cap(r.Containers) > 0 {
+	if len(r.Containers) > 0 {
 		r.Status = pb.RunnerStatus_BUSY
 	} else {
 		r.Status = pb.RunnerStatus_IDLE
@@ -81,45 +82,46 @@ func (r *Runner) Heartbeat() (err error) {
 	glog.Infof("runner[%s] heartbeat", r.ID)
 	r.refreshBars()
 	// update machine info
-	err := r.Machine.Update()
+	err = r.Machine.Update()
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 	r.updateStatus()
 	var jobs []*pb.Job
-	for _, job := range r.Containers {
-		jobs = append(jobs, job)
+	for _, c := range r.Containers {
+		jobs = append(jobs, c.Job)
 	}
 	pbRunner := &pb.Runner{
-		Id:     r.ID,
-		Status: r.Status,
-		Jobs:   jobs,
-		CpuCoreNum: r.Machine.CPUNum,
-		CpuUtilization: r.Machine.CPUUtilization,
-		GpuNum: r.Machine.GPUNum,
-		GpusIndex: r.Machine.GPUsIndex,
-		GpuUtilization: r.Machine.GPUUtilization,
-		Memory: r.Machine.Memory,
-		AvailableMemory: r.Machine.AvailableMemory,
-		GpuMemory: r.Machine.GPUMemory,
+		Id:                 r.ID,
+		Status:             r.Status,
+		Jobs:               jobs,
+		CpuCoreNum:         r.Machine.CPUNum,
+		CpuUtilization:     r.Machine.CPUUtilization,
+		GpuNum:             r.Machine.GPUNum,
+		GpusIndex:          r.Machine.GPUsIndex,
+		GpuUtilization:     r.Machine.GPUUtilization,
+		Memory:             r.Machine.Memory,
+		AvailableMemory:    r.Machine.AvailableMemory,
+		GpuMemory:          r.Machine.GPUMemory,
 		AvailableGpuMemory: r.Machine.AvailableGPUMemory,
-		Token: r.Token,
+		Token:              r.Token,
 	}
-	req := &pb.HeartBeatRequest{
-		Runner: pbRunner,
-	}
-	resp, err := c.Client.HeartBeat(context.Background(), req)
-	if err != nil {
-		glog.Error(err)
-		return
-	}
-
-	if !resp.Ok {
-		err = fmt.Sprintf("Runner heartbeat: scheduler rpc server err response")
-		glog.Error(err)
-		return
-	}
+	glog.Infof("runner pbRunner %v", pbRunner)
+	// req := &pb.HeartBeatRequest{
+	// 	Runner: pbRunner,
+	// }
+	// resp, err := r.schedulerClient.HeartBeat(context.Background(), req)
+	// if err != nil {
+	// 	glog.Error(err)
+	// 	return
+	// }
+	//
+	// if !resp.Ok {
+	// 	err = errors.New("Runner heartbeat: scheduler rpc server err response")
+	// 	glog.Error(err)
+	// 	return
+	// }
 	// TODO: do jobs in resp.Jobs
 	// TODO: destory
 	return

@@ -19,10 +19,10 @@ type Machine struct {
 	GPUsIndex          []int32
 	GPUMemory          int64
 	AvailableGPUMemory int64
-	GPUUtilization     float32
+	GPUUtilization     float64
 	GPUDevices         []*nvml.Device
 	CPUNum             int32
-	CPUUtilization     float32
+	CPUUtilization     float64
 	Memory             int64
 	AvailableMemory    int64
 }
@@ -138,7 +138,7 @@ func (m *Machine) UpdateCPUUtilization() (err error) {
 		}
 	}
 	// 从百分比 转化为比例(0-1)
-	m.CPUUtilization = float32(cpuUtilizations[0]) * 0.01
+	m.CPUUtilization = float64(cpuUtilizations[0]) * 0.01
 	return
 }
 
@@ -164,7 +164,7 @@ func (m *Machine) UpdateGPU() (err error) {
 	m.AvailableGPUMemory = m.GPUMemory - usedMem
 	if m.GPUNum > 0 {
 		// 从百分比 转化为比例(0-1)
-		m.GPUUtilization = float32(totalUtilization) * 0.01 / float32(m.GPUNum)
+		m.GPUUtilization = float64(totalUtilization) * 0.01 / float64(m.GPUNum)
 	}
 	return
 }
