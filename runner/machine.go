@@ -3,10 +3,10 @@ package runner
 import (
 	"time"
 
-	"github.com/tradingAI/gpu-monitoring-tools/bindings/go/nvml"
 	"github.com/golang/glog"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
+	"github.com/tradingAI/gpu-monitoring-tools/bindings/go/nvml"
 )
 
 // NOTE: 这里获取的机器信息都是容机内的虚拟机的信息, linux系统可以通过
@@ -19,6 +19,7 @@ type Machine struct {
 	GPUsIndex          []int32
 	GPUMemory          int64
 	AvailableGPUMemory int64
+	GPUUtilization     float32
 	GPUDevices         []*nvml.Device
 	CPUNum             int32
 	CPUUtilization     float32
@@ -84,12 +85,12 @@ func NewMachine() (m *Machine, err error) {
 		return
 	}
 	m = &Machine{
-		GPUNum:   int32(gpuNum),
-		GPUsIndex:  gpusIndex,
-		GPUMemory:  totalGPUMemory,
-		GPUDevices: devices,
-		CPUNum:     cpuNum,
-		Memory:     totalMemory,
+		GPUNum:          int32(gpuNum),
+		GPUsIndex:       gpusIndex,
+		GPUMemory:       totalGPUMemory,
+		GPUDevices:      devices,
+		CPUNum:          cpuNum,
+		Memory:          totalMemory,
 		AvailableMemory: availableMemeory,
 	}
 	return
@@ -163,7 +164,7 @@ func (m *Machine) UpdateGPU() (err error) {
 	m.AvailableGPUMemory = m.GPUMemory - usedMem
 	if m.GPUNum > 0 {
 		// 从百分比 转化为比例(0-1)
-		m.CPUUtilization = float32(totalUtilization) * 0.01 / float32(m.GPUNum)
+		m.GPUUtilization = float32(totalUtilization) * 0.01 / float32(m.GPUNum)
 	}
 	return
 }

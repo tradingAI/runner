@@ -7,14 +7,19 @@ import (
 	minio "github.com/tradingAI/go/s3/minio"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 	"github.com/tradingAI/runner/plugins"
+	"google.golang.org/grpc"
 )
 
 type Runner struct {
-	Conf       Conf
-	Minio      *minio.Client
-	ID         string
-	Token      string
-	Containers map[uint64]Container // key: jobID, value: Container
+	Conf            Conf
+	Minio           *minio.Client
+	ID              string
+	Token           string
+	Containers      map[uint64]Container // key: jobID, value: Container
+	Machine         *Machine
+	schedulerClient *pb.SchedulerClient
+	schedulerConn   *grpc.ClientConn
+	Status          pb.RunnerStatus
 }
 
 func New(conf Conf) (r *Runner, err error) {
@@ -32,7 +37,11 @@ func New(conf Conf) (r *Runner, err error) {
 	}
 
 	r.Containers = make(map[uint64]Container)
-
+	machine, err := NewMachine()
+	if err != nil {
+		glog.Error(err)
+		return
+	}
 	return
 }
 
@@ -60,10 +69,59 @@ func (r *Runner) Free() {
 	return
 }
 
+func (r *Runner) updateStatus() {
+	if cap(r.Containers) > 0 {
+		r.Status = pb.RunnerStatus_BUSY
+	} else {
+		r.Status = pb.RunnerStatus_IDLE
+	}
+}
+
 func (r *Runner) Heartbeat() (err error) {
 	glog.Infof("runner[%s] heartbeat", r.ID)
 	r.refreshBars()
-	// TODO: collect machine info call rpc hearbeat
+	// update machine info
+	err := r.Machine.Update()
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+	r.updateStatus()
+	var jobs []*pb.Job
+	for _, job := range r.Containers {
+		jobs = append(jobs, job)
+	}
+	pbRunner := &pb.Runner{
+		Id:     r.ID,
+		Status: r.Status,
+		Jobs:   jobs,
+		CpuCoreNum: r.Machine.CPUNum,
+		CpuUtilization: r.Machine.CPUUtilization,
+		GpuNum: r.Machine.GPUNum,
+		GpusIndex: r.Machine.GPUsIndex,
+		GpuUtilization: r.Machine.GPUUtilization,
+		Memory: r.Machine.Memory,
+		AvailableMemory: r.Machine.AvailableMemory,
+		GpuMemory: r.Machine.GPUMemory,
+		AvailableGpuMemory: r.Machine.AvailableGPUMemory,
+		Token: r.Token,
+	}
+	req := &pb.HeartBeatRequest{
+		Runner: pbRunner,
+	}
+	resp, err := c.Client.HeartBeat(context.Background(), req)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+
+	if !resp.Ok {
+		err = fmt.Sprintf("Runner heartbeat: scheduler rpc server err response")
+		glog.Error(err)
+		return
+	}
+	// TODO: do jobs in resp.Jobs
+	// TODO: destory
 	return
 }
 
