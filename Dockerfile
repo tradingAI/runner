@@ -1,5 +1,5 @@
 # https://github.com/tradingAI/docker/blob/master/bazel.Dockerfile
-FROM tradingai/bazel:latest as build
+FROM tradingai/bazel:gpu-latest as build
 
 ENV ROOT=/go/src/github.com/tradingAI
 ENV PROJECT_PATH=${ROOT}/runner
