@@ -28,7 +28,16 @@ type Machine struct {
 
 func isGPUAvailable() (gpuAvailable bool, err error) {
 	// TODO: 当GPU可用时
-	return
+	err = nvml.Init()
+	if err != nil {
+		glog.Error(err)
+		if err.Error() == "could not load NVML library" {
+			glog.Info("isGPUAvailable: false, could not load NVML library")
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }
 
 func NewMachine() (m *Machine, err error) {
@@ -41,12 +50,7 @@ func NewMachine() (m *Machine, err error) {
 	var gpusIndex []int32
 	var totalGPUMemory int64
 	var devices []*nvml.Device
-	if !gpuAvailable {
-		err = nvml.Init()
-		if err != nil {
-			glog.Error(err)
-			return
-		}
+	if gpuAvailable {
 		gpuNum, err = nvml.GetDeviceCount()
 		if err != nil {
 			glog.Error(err)
@@ -132,7 +136,8 @@ func (m *Machine) UpdateCPUUtilization() (err error) {
 			return
 		}
 	}
-	m.CPUUtilization = float32(cpuUtilizations[0])
+	// 从百分比 转化为比例(0-1)
+	m.CPUUtilization = float32(cpuUtilizations[0]) * 0.01
 	return
 }
 

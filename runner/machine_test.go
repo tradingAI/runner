@@ -20,3 +20,20 @@ func TestGetPhysicalCPUNum(t *testing.T){
     assert.Nil(t, err)
     assert.True(t, actual >= int32(1))
 }
+
+func TestUpdateMemory(t *testing.T){
+	m, err := NewMachine()
+	assert.Nil(t, err)
+	m.UpdateMemory()
+	assert.True(t, m.AvailableMemory > 0)
+}
+
+func TestUpdateCPUUtilization(t *testing.T){
+	m, err := NewMachine()
+	assert.Equal(t, float32(0), m.CPUUtilization)
+	assert.Nil(t, err)
+	m.UpdateCPUUtilization()
+	assert.True(t, m.CPUUtilization > 0)
+}
+
+// TODO: add gpu test in GPU evironment

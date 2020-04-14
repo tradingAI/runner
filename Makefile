@@ -24,10 +24,11 @@ test: clean
 vtest: clean
 	go test -v ./...
 
-# docker test
-dtest:
-	# docker-compose down
+clean_minio:
 	rm -rf /tmp/runner/minio/data/*
+	
+# docker test
+dtest: clean_minio
 	docker-compose up test
 
 run:
