@@ -7,11 +7,6 @@ import (
 )
 
 
-func TestGetLogicCPUNum(t *testing.T){
-    assert.True(t, GetLogicCPUNum() > 0)
-}
-
-
 func TestGetMemory(t *testing.T){
     totalMemory, _, err := GetMemory()
     // NOTE(wen): 默认内存大于 300M
@@ -26,10 +21,19 @@ func TestGetPhysicalCPUNum(t *testing.T){
     assert.True(t, actual >= int32(1))
 }
 
-func TestGetMachineInfo(t *testing.T)  {
-	cpuNum, totalMemory, availableMemeory, err := GetMachineInfo()
+func TestUpdateMemory(t *testing.T){
+	m, err := NewMachine()
 	assert.Nil(t, err)
-	assert.True(t, cpuNum >= int32(1))
-	assert.True(t, totalMemory >= int64(300 * 1024 * 1024))
-	assert.True(t, availableMemeory >= int64(300 * 1024 * 1024))
+	m.UpdateMemory()
+	assert.True(t, m.AvailableMemory > 0)
 }
+
+func TestUpdateCPUUtilization(t *testing.T){
+	m, err := NewMachine()
+	assert.Equal(t, float32(0), m.CPUUtilization)
+	assert.Nil(t, err)
+	m.UpdateCPUUtilization()
+	assert.True(t, m.CPUUtilization > 0)
+}
+
+// TODO: add gpu test in GPU evironment
