@@ -33,6 +33,7 @@ require (
 	github.com/shirou/gopsutil v2.20.3+incompatible
 	github.com/stretchr/testify v1.5.1
 	github.com/tradingAI/go v0.0.0-20200412172521-d675ba819c87
+	github.com/tradingAI/gpu-monitoring-tools v0.0.0-20200414012139-248b8561bf29
 	github.com/tradingAI/proto/gen/go/common v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000

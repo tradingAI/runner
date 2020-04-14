@@ -3,7 +3,7 @@ package runner
 import (
 	"time"
 
-	"github.com/NVIDIA/gpu-monitoring-tools/bindings/go/nvml"
+	"github.com/tradingAI/gpu-monitoring-tools/bindings/go/nvml"
 	"github.com/golang/glog"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
