@@ -90,15 +90,19 @@ func (m *Machine) UpdateMemory() (err error) {
 }
 
 func (m *Machine) UpdateCPUUtilization() (err error) {
-	cpuUtilizations, err := cpu.Percent(time.Duration(0), false)
+	percents, err := cpu.Percent(time.Duration(0), false)
 	if err != nil {
 		if err != nil {
 			glog.Error(err)
 			return
 		}
 	}
-	// 从百分比 转化为比例(0-1)
-	m.CPUUtilization = float64(cpuUtilizations[0]) * 0.01
+
+	for _, p := range percents {
+		// 从百分比 转化为比例(0-1)
+		m.CPUUtilization += p * 0.01
+		glog.Infof("m.CPUUtilization %.3f", p)
+	}
 	return
 }
 

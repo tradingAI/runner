@@ -23,10 +23,11 @@ type Conf struct {
 	TensorboardDir   string
 	InferDir         string
 	EvalDir          string
+	SchedulerHost    string
 }
 
 // LoadConf load config from env
-func LoadConf() (conf Conf, err error) {
+func LoadConf() (conf *Conf, err error) {
 	minioPort, err := strconv.Atoi(os.Getenv("RUNNER_MINIO_PORT"))
 	if err != nil {
 		glog.Error(err)
@@ -45,7 +46,7 @@ func LoadConf() (conf Conf, err error) {
 		return
 	}
 
-	conf = Conf{
+	conf = &Conf{
 		StorageDir: os.Getenv("TWEB_STORAGE_DIR"),
 		Minio: minio.MinioConf{
 			AccessKey: os.Getenv("RUNNER_MINIO_ACCESS_KEY"),
@@ -64,6 +65,7 @@ func LoadConf() (conf Conf, err error) {
 		TensorboardDir:   plugins.TENSORBOARD_DIR,
 		InferDir:         plugins.INFER_DIR,
 		EvalDir:          plugins.EVAL_DIR,
+		SchedulerHost:    os.Getenv("SCHEDULER_HOST"),
 	}
 
 	if err = conf.Validate(); err != nil {

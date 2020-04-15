@@ -1,17 +1,19 @@
 package runner
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang/glog"
 	minio "github.com/tradingAI/go/s3/minio"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
-	"github.com/tradingAI/runner/plugins"
 	"google.golang.org/grpc"
 )
 
 type Runner struct {
-	Conf            Conf
+	Conf            *Conf
 	Minio           *minio.Client
 	ID              string
 	Token           string
@@ -22,7 +24,7 @@ type Runner struct {
 	Status          pb.RunnerStatus
 }
 
-func New(conf Conf) (r *Runner, err error) {
+func New(conf *Conf) (r *Runner, err error) {
 	// make runner
 	r = &Runner{
 		Conf:  conf,
@@ -43,15 +45,17 @@ func New(conf Conf) (r *Runner, err error) {
 		return
 	}
 	r.Machine = machine
+	err = r.Machine.Update()
+	if err != nil {
+		glog.Error(err)
+		return
+	}
 	return
 }
 
 func (r *Runner) StartOrDie() (err error) {
 	glog.Info("Starting runner")
 	r.Heartbeat()
-	r.Listen()
-	// TODO: remove , 测试用
-	r.Conf.HeartbeatSeconds = 1500
 	d := time.Duration(int64(time.Second) * int64(r.Conf.HeartbeatSeconds))
 	t := time.NewTicker(d)
 	defer t.Stop()
@@ -59,9 +63,6 @@ func (r *Runner) StartOrDie() (err error) {
 	for {
 		<-t.C
 		r.Heartbeat()
-		r.Listen()
-		// TODO: remove 本地测试用
-		return
 	}
 	return
 }
@@ -108,71 +109,64 @@ func (r *Runner) Heartbeat() (err error) {
 		Token:              r.Token,
 	}
 	glog.Infof("runner pbRunner %v", pbRunner)
-	// req := &pb.HeartBeatRequest{
-	// 	Runner: pbRunner,
-	// }
-	// resp, err := r.schedulerClient.HeartBeat(context.Background(), req)
-	// if err != nil {
-	// 	glog.Error(err)
-	// 	return
-	// }
-	//
-	// if !resp.Ok {
-	// 	err = errors.New("Runner heartbeat: scheduler rpc server err response")
-	// 	glog.Error(err)
-	// 	return
-	// }
-	// TODO: do jobs in resp.Jobs
-	// TODO: destory
+	glog.Infof("r.Machine.CPUUtilization: %.3f", r.Machine.CPUUtilization)
+	req := &pb.HeartBeatRequest{
+		Runner: pbRunner,
+	}
+	conn, err := grpc.Dial(r.Conf.SchedulerHost, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+	defer conn.Close()
+	schedulerClient := pb.NewSchedulerClient(conn)
+
+	resp, err := schedulerClient.HeartBeat(context.Background(), req)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+
+	if !resp.Ok {
+		err = errors.New("Runner heartbeat: scheduler rpc server err response")
+		glog.Error(err)
+		return
+	}
+	if resp != nil {
+		for _, job := range resp.Jobs {
+			err = r.RunJob(job)
+			if err != nil {
+				glog.Error(err)
+			}
+		}
+	}
 	return
 }
 
-func (r *Runner) getCreateJobFromRedis() (job *pb.Job, err error) {
-	// TODO
-	job = &pb.Job{
-		Id:       uint64(123456789),
-		RunnerId: r.ID,
-		Type:     pb.JobType_TRAIN,
-		Input:    plugins.CreateDefaultTbaseTrainJobInput(),
-	}
-	return job, nil
-}
+func (r *Runner) RunJob(job *pb.Job) (err error) {
 
-func (r *Runner) getStopJobFromRedis() (job *pb.Job, err error) {
-	// TODO
-	// job = &pb.Job{
-	// 	Id:       uint64(123456789),
-	// 	RunnerId: r.ID,
-	// 	Type:     pb.JobType_TRAIN,
-	// }
-	// return job, nil
-	return nil, nil
-}
-
-func (r *Runner) Listen() (err error) {
-	glog.Infof("runner[%s] listen job from redis", r.ID)
-	// TODO: listen redis status and excute actions
-	// create
-	createJob, _ := r.getCreateJobFromRedis()
-	if createJob != nil {
+	switch job.Status {
+	case pb.JobStatus_CREATED:
 		go func(r *Runner) {
-			err := r.CreateJob(createJob)
+			err := r.CreateJob(job)
 			if err != nil {
 				glog.Error(err)
+				return
 			}
 		}(r)
-	}
-	// TODO: 删除sleep, 暂时用于本地测试用
-	time.Sleep(15 * time.Second)
-	// stop
-	stopJob, _ := r.getStopJobFromRedis()
-	if stopJob != nil {
+	case pb.JobStatus_CANCELLED:
 		go func(r *Runner) {
-			err := r.StopJob(stopJob.Id)
+			err := r.StopJob(job.Id)
 			if err != nil {
 				glog.Error(err)
+				return
 			}
 		}(r)
+	default:
+		err = errors.New(fmt.Sprintf("Runner RunJob error: invalid job status %v", job))
+		glog.Error(err)
+		return
 	}
+
 	return
 }
