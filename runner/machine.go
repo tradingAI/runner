@@ -3,7 +3,6 @@ package runner
 import (
 	"time"
 
-	"github.com/tradingAI/gpu-monitoring-tools/bindings/go/nvml"
 	"github.com/golang/glog"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
@@ -19,7 +18,6 @@ type Machine struct {
 	GPUsIndex          []int32
 	GPUMemory          int64
 	AvailableGPUMemory int64
-	GPUDevices         []*nvml.Device
 	CPUNum             int32
 	CPUUtilization     float32
 	Memory             int64
@@ -28,16 +26,7 @@ type Machine struct {
 
 func isGPUAvailable() (gpuAvailable bool, err error) {
 	// TODO: 当GPU可用时
-	err = nvml.Init()
-	if err != nil {
-		glog.Error(err)
-		if err.Error() == "could not load NVML library" {
-			glog.Info("isGPUAvailable: false, could not load NVML library")
-			return false, nil
-		}
-		return false, err
-	}
-	return true, nil
+	return false, nil
 }
 
 func NewMachine() (m *Machine, err error) {
@@ -45,32 +34,6 @@ func NewMachine() (m *Machine, err error) {
 	if err != nil {
 		glog.Error(err)
 		return
-	}
-	var gpuNum uint
-	var gpusIndex []int32
-	var totalGPUMemory int64
-	var devices []*nvml.Device
-	if gpuAvailable {
-		gpuNum, err = nvml.GetDeviceCount()
-		if err != nil {
-			glog.Error(err)
-			return
-		}
-		for i := uint(0); i < gpuNum; i++ {
-			device, err := nvml.NewDevice(i)
-			if err != nil {
-				glog.Error(err)
-				return m, err
-			}
-			devices = append(devices, device)
-			gpusIndex = append(gpusIndex, int32(i))
-		}
-		totalGPUMemory = int64(0)
-		for _, dev := range devices {
-			if mem := dev.Memory; mem != nil {
-				totalGPUMemory += int64(*mem)
-			}
-		}
 	}
 
 	cpuNum, err := GetPhysicalCPUNum()
@@ -84,12 +47,9 @@ func NewMachine() (m *Machine, err error) {
 		return
 	}
 	m = &Machine{
-		GPUNum:   int32(gpuNum),
-		GPUsIndex:  gpusIndex,
-		GPUMemory:  totalGPUMemory,
-		GPUDevices: devices,
-		CPUNum:     cpuNum,
-		Memory:     totalMemory,
+		gpuAvailable: gpuAvailable,
+		CPUNum:          cpuNum,
+		Memory:          totalMemory,
 		AvailableMemory: availableMemeory,
 	}
 	return
@@ -141,33 +101,6 @@ func (m *Machine) UpdateCPUUtilization() (err error) {
 	return
 }
 
-func (m *Machine) UpdateGPU() (err error) {
-	usedMem := int64(0)
-	totalUtilization := uint(0)
-	for _, dev := range m.GPUDevices {
-		pInfo, err := dev.GetAllRunningProcesses()
-		if err != nil {
-			glog.Error(err)
-			return err
-		}
-		for _, p := range pInfo {
-			usedMem += int64(p.MemoryUsed)
-		}
-		status, err := dev.Status()
-		if err != nil {
-			glog.Error(err)
-			return err
-		}
-		totalUtilization += *status.Utilization.GPU
-	}
-	m.AvailableGPUMemory = m.GPUMemory - usedMem
-	if m.GPUNum > 0 {
-		// 从百分比 转化为比例(0-1)
-		m.CPUUtilization = float32(totalUtilization) * 0.01 / float32(m.GPUNum)
-	}
-	return
-}
-
 func (m *Machine) Update() (err error) {
 	err = m.UpdateMemory()
 	if err != nil {
@@ -175,11 +108,6 @@ func (m *Machine) Update() (err error) {
 		return
 	}
 	err = m.UpdateCPUUtilization()
-	if err != nil {
-		glog.Error(err)
-		return
-	}
-	err = m.UpdateGPU()
 	if err != nil {
 		glog.Error(err)
 		return
