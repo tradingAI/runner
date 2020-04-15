@@ -15,7 +15,6 @@ replace github.com/docker/docker/internal/testutil => gotest.tools/v3 v3.0.0
 require (
 	docker.io/go-docker v1.0.0
 	github.com/Microsoft/go-winio v0.4.14 // indirect
-	github.com/NVIDIA/gpu-monitoring-tools v0.0.0-20200403082939-e5b04ac17c03 // indirect
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker/internal/testutil v0.0.0-00010101000000-000000000000 // indirect
@@ -32,7 +31,7 @@ require (
 	github.com/shirou/gopsutil v2.20.3+incompatible
 	github.com/stretchr/testify v1.5.1
 	github.com/tradingAI/go v0.0.0-20200412172521-d675ba819c87
-	github.com/tradingAI/gpu-monitoring-tools v0.0.0-20200414012139-248b8561bf29
+	github.com/tradingAI/gpu-monitoring-tools v0.0.2
 	github.com/tradingAI/proto/gen/go/common v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/model v0.0.0-00010101000000-000000000000
 	github.com/tradingAI/proto/gen/go/scheduler v0.0.0-00010101000000-000000000000

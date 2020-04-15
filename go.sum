@@ -4,7 +4,6 @@ docker.io/go-docker v1.0.0/go.mod h1:7tiAn5a0LFmjbPDbyTPOaTTOuG1ZRNXdPA6RvKY+fpY
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Microsoft/go-winio v0.4.14 h1:+hMXMk01us9KgxGb7ftKQt2Xpf5hH/yky+TDA+qxleU=
 github.com/Microsoft/go-winio v0.4.14/go.mod h1:qXqCSQ3Xa7+6tgxaGTIe4Kpcdsi+P8jBhyzoq1bpyYA=
-github.com/NVIDIA/gpu-monitoring-tools v0.0.0-20200403082939-e5b04ac17c03 h1:pUHrbsxr7G1nE+w4wezGlSHa1pV3oUxOMROzeX+1A1c=
 github.com/NVIDIA/gpu-monitoring-tools v0.0.0-20200403082939-e5b04ac17c03/go.mod h1:nMOvShGpWaf0bXwXmeu4k+O4uziuaEI8pWzIj3BUrOA=
 github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d h1:G0m3OIz70MZUWq3EgK3CesDbo8upS2Vm9/P3FtgI+Jk=
 github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d/go.mod h1:3eOhrUMpNV+6aFIbp5/iudMxNCF27Vw2OZgy4xEx0Fg=
@@ -67,6 +66,7 @@ github.com/google/go-cmp v0.4.0 h1:xsAVV57WRhGj6kEIi8ReJzQlHHqcBYCElAvkovg3B/4=
 github.com/google/go-cmp v0.4.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1 h1:EGx4pi6eqNxGaHF6qqu48+N2wcFQ5qg5FXgOdqsJ5d8=
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
+github.com/gorilla/mux v1.7.4/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
 github.com/jinzhu/gorm v1.9.12/go.mod h1:vhTjlKSJUTWNtcbQtrMBFCxy7eXTzeCAzfL5fBZT/Qs=
 github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc=
 github.com/jinzhu/now v1.0.1/go.mod h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=
@@ -129,8 +129,8 @@ github.com/stretchr/testify v1.5.1 h1:nOGnQDM7FYENwehXlg/kFVnos3rEvtKTjRvOWSzb6H
 github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/tradingAI/go v0.0.0-20200412172521-d675ba819c87 h1:9TCwe6ywmDMuua6N8cwRkRLSUcCrCA45i9U9ETOtRiA=
 github.com/tradingAI/go v0.0.0-20200412172521-d675ba819c87/go.mod h1:460UEehrPrdz1NXbOi5WPdH1I5ag9yfMtXC6250RzHo=
-github.com/tradingAI/gpu-monitoring-tools v0.0.0-20200414012139-248b8561bf29 h1:Ul+cbkKKPuLC4HSteowKSRcC63jG6QqOa5Is0SBab4A=
-github.com/tradingAI/gpu-monitoring-tools v0.0.0-20200414012139-248b8561bf29/go.mod h1:V9F0xWCvoOh9m3hYwFEKUMMJMwmYdIhVPQBtZUrwhg8=
+github.com/tradingAI/gpu-monitoring-tools v0.0.2 h1:EaY48UpLRJh8bUzVk2arXDKyWTcddUHmITIOkwJcqok=
+github.com/tradingAI/gpu-monitoring-tools v0.0.2/go.mod h1:kGOFhISCV00mwolZjS4vsFnu06rJy57Ac7RTCrlStE8=
 github.com/ulikunitz/xz v0.5.6 h1:jGHAfXawEGZQ3blwU5wnWKQJvAraT7Ftq9EXjnXYgt8=
 github.com/ulikunitz/xz v0.5.6/go.mod h1:2bypXElzHzzJZwzH67Y6wb67pO62Rzfn7BSiF4ABRW8=
 github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 h1:nIPpBwaJSVYIxUFsDv3M8ofmx9yWTog9BfvIu0q41lo=
