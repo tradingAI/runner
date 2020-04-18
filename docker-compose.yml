@@ -15,6 +15,7 @@ services:
       HEARTBEAT_SECONDS: 10
       RUNNER_DATA_DIR: /root/runner/data/
       SCHEDULER_HOST: localhost:8889
+      RUNNER_TOKEN: test_token
     depends_on:
         - minio
     volumes:

@@ -101,7 +101,6 @@ func (m *Machine) UpdateCPUUtilization() (err error) {
 	for _, p := range percents {
 		// 从百分比 转化为比例(0-1)
 		m.CPUUtilization += p * 0.01
-		glog.Infof("m.CPUUtilization %.3f", p)
 	}
 	return
 }

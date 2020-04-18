@@ -13,6 +13,7 @@ services:
       RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
       HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
       RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
+      RUNNER_TOKEN: ${RUNNER_TOKEN}
     # restart: always
     command:
       /runner

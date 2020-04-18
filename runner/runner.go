@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/golang/glog"
+	"github.com/google/uuid"
 	minio "github.com/tradingAI/go/s3/minio"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
 	"google.golang.org/grpc"
@@ -16,7 +17,6 @@ type Runner struct {
 	Conf            *Conf
 	Minio           *minio.Client
 	ID              string
-	Token           string
 	Containers      map[uint64]Container // key: jobID, value: Container
 	Machine         *Machine
 	schedulerClient pb.SchedulerClient
@@ -27,9 +27,8 @@ type Runner struct {
 func New(conf *Conf) (r *Runner, err error) {
 	// make runner
 	r = &Runner{
-		Conf:  conf,
-		ID:    "test_runner_id", // TODO: use uuid
-		Token: "test_token",     // TODO: use evn token
+		Conf: conf,
+		ID:   uuid.New().String(),
 	}
 
 	r.Minio, err = minio.NewMinioClient(r.Conf.Minio)
@@ -106,7 +105,6 @@ func (r *Runner) Heartbeat() (err error) {
 		AvailableMemory:    r.Machine.AvailableMemory,
 		GpuMemory:          r.Machine.GPUMemory,
 		AvailableGpuMemory: r.Machine.AvailableGPUMemory,
-		Token:              r.Token,
 	}
 	glog.Infof("runner pbRunner %v", pbRunner)
 	glog.Infof("r.Machine.CPUUtilization: %.3f", r.Machine.CPUUtilization)
@@ -132,39 +130,46 @@ func (r *Runner) Heartbeat() (err error) {
 		glog.Error(err)
 		return
 	}
-	if resp != nil {
-		for _, job := range resp.Jobs {
-			err = r.RunJob(job)
-			if err != nil {
-				glog.Error(err)
-			}
-		}
-	}
+	r.RunJobs(resp.Jobs)
 	return
 }
 
-func (r *Runner) RunJob(job *pb.Job) (err error) {
+// NOTE(wen): 一个job出现错误，不影响runner继续执行, 所以没有返回error
+func (r *Runner) RunJobs(jobs []*pb.Job) {
+	for _, job := range jobs {
+		glog.Infof("Runner RunJobs: job.id=%d", job.Id)
+		r.RunJob(job)
+	}
+}
 
+func (r *Runner) RunJob(job *pb.Job) (err error) {
+	glog.Infof("Runner RunJob: job=[%v]", job)
 	switch job.Status {
 	case pb.JobStatus_CREATED:
-		go func(r *Runner) {
-			err := r.CreateJob(job)
-			if err != nil {
-				glog.Error(err)
-				return
-			}
-		}(r)
+		glog.Infof("Runner RunJob: creating job.id=%d", job.Id)
+		job.Status = pb.JobStatus_RUNNING
+		err = r.CreateJob(job)
+		if err != nil {
+			glog.Error(err)
+			job.Status = pb.JobStatus_FAILED
+			return
+		}
+		job.Status = pb.JobStatus_SUCCESSED
+		return
 	case pb.JobStatus_CANCELLED:
-		go func(r *Runner) {
-			err := r.StopJob(job.Id)
-			if err != nil {
-				glog.Error(err)
-				return
-			}
-		}(r)
+		glog.Infof("Runner RunJob: stopping job.id=%d", job.Id)
+		err = r.StopJob(job)
+		if err != nil {
+			glog.Error(err)
+			job.Status = pb.JobStatus_FAILED
+		}
+		job.Status = pb.JobStatus_CANCELLED
+		// TODO: 重新定义stop状态, stopped
+		return
 	default:
 		err = errors.New(fmt.Sprintf("Runner RunJob error: invalid job status %v", job))
 		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
 		return
 	}
 

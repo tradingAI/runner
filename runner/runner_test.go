@@ -8,6 +8,6 @@ import (
 
 func TestNew(t *testing.T) {
 	c := creatTestRunner()
-	assert.Equal(t, "test_runner_id", c.ID)
-	assert.Equal(t, "test_token", c.Token)
+	assert.Equal(t, 36, len(c.ID))
+	assert.Equal(t, "test_token", c.Conf.Token)
 }

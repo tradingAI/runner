@@ -2,6 +2,7 @@ package runner
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -18,16 +19,34 @@ import (
 
 func (r *Runner) CreateJob(job *pb.Job) (err error) {
 	glog.Infof("runner %s creating job %d", r.ID, job.Id)
+	if job.Type == pb.JobType_UNKNOWN_TYPE {
+		err = errors.New(fmt.Sprintf("Runner CreateJob: invalid JobType: %v", job.Type))
+		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
+		return
+	}
+	// if eval job or infer job: down load model
+	if job.Type == pb.JobType_INFER || job.Type == pb.JobType_EVALUATION {
+		_, err = r.downloadAndUnarchiveModel(job)
+		if err != nil {
+			glog.Error(err)
+			job.Status = pb.JobStatus_FAILED
+			return
+		}
+	}
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
 		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
 		return
 	}
+	defer cli.Close()
 	// pull image
 	reader, err := cli.ImagePull(ctx, DEFAULT_IMAGE, types.ImagePullOptions{})
 	if err != nil {
 		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
 		return
 	}
 	io.Copy(os.Stdout, reader)
@@ -36,6 +55,7 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 	err = r.createShellFile(job, plugin)
 	if err != nil {
 		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
 		return
 	}
 	jobIdStr := strconv.FormatUint(job.Id, 10)
@@ -53,6 +73,7 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 	}, nil, jobIdStr)
 	if err != nil {
 		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
 		return
 	}
 
@@ -68,45 +89,52 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 
 	if err := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
 		return err
 	}
 
 	// stream read container log and write into file
 	go writeLog(resp.ID, logFilePath)
 
-	ch := make(chan int)
 	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
 	select {
 	case err := <-errCh:
 		if err != nil {
 			glog.Error(err)
-			return err
+			job.Status = pb.JobStatus_FAILED
 		}
 	case <-statusCh:
 		glog.Infof("runner %s completed job %d, container id: %s", r.ID, job.Id, resp.ID)
-
-		ch <- 1
 	}
-	<-ch
-	r.RemoveContainer(job.Id)
+	err = r.StopJob(job)
+	if err != nil {
+		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
+		return err
+	}
 	return
 }
 
-func (r *Runner) StopJob(id uint64) (err error) {
+func (r *Runner) StopJob(job *pb.Job) (err error) {
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
 		glog.Error(err)
 		return
 	}
-	container_id := r.Containers[id].ShortID
-	glog.Infof("runner %s stopping job %d, container id: %s", r.ID, id, container_id)
-	if err := cli.ContainerStop(ctx, container_id, nil); err != nil {
+	containerId := r.Containers[job.Id].ShortID
+	glog.Infof("runner %s stopping job %d, container id: %s", r.ID, job.Id, containerId)
+	if err := cli.ContainerStop(ctx, containerId, nil); err != nil {
 		glog.Error(err)
 		return err
 	}
-	glog.Infof("runner %s stopped job %d, container id: %s", r.ID, id, container_id)
-	err = r.RemoveContainer(id)
+	glog.Infof("runner %s stopped job %d, container id: %s", r.ID, job.Id, containerId)
+	err = r.RemoveContainer(job)
+	if err != nil {
+		glog.Error(err)
+		return err
+	}
+	err = r.UpdateJob(job)
 	if err != nil {
 		glog.Error(err)
 		return err
@@ -114,7 +142,7 @@ func (r *Runner) StopJob(id uint64) (err error) {
 	return
 }
 
-func (r *Runner) RemoveContainer(id uint64) (err error) {
+func (r *Runner) RemoveContainer(job *pb.Job) (err error) {
 	ctx := context.Background()
 	cli, err := docker.NewEnvClient()
 	if err != nil {
@@ -122,12 +150,12 @@ func (r *Runner) RemoveContainer(id uint64) (err error) {
 		return
 	}
 	// remove container
-	container_id := r.Containers[id].ShortID
-	glog.Infof("runner %s removing container id: %s, job id %d", r.ID, container_id, id)
-	if err := cli.ContainerRemove(ctx, container_id, types.ContainerRemoveOptions{}); err != nil {
+	containerId := r.Containers[job.Id].ShortID
+	glog.Infof("runner %s removing container id: %s, job id %d", r.ID, containerId, job.Id)
+	if err := cli.ContainerRemove(ctx, containerId, types.ContainerRemoveOptions{}); err != nil {
 		glog.Error(err)
 		return err
 	}
-	glog.Infof("runner %s removed container id: %s, job %d", r.ID, container_id, id)
+	glog.Infof("runner %s removed container id: %s, job %d", r.ID, containerId, job.Id)
 	return
 }

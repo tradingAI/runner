@@ -12,7 +12,7 @@ func creatTestRunner() (r *Runner) {
     return
 }
 
-func createTestTrainJob() (job *pb.Job) {
+func CreateTestTrainJob() (job *pb.Job) {
 	job = &pb.Job{
 		Id:       uint64(123456789),
 		RunnerId: "test_runner_id",
@@ -22,7 +22,7 @@ func createTestTrainJob() (job *pb.Job) {
 	return
 }
 
-func createTestEvalJob() (job *pb.Job) {
+func CreateTestEvalJob() (job *pb.Job) {
 	job = &pb.Job{
 		Id:       uint64(3),
 		RunnerId: "test_runner_id",
@@ -32,7 +32,7 @@ func createTestEvalJob() (job *pb.Job) {
 	return
 }
 
-func createTestInferJob() (job *pb.Job) {
+func CreateTestInferJob() (job *pb.Job) {
 	job = &pb.Job{
 		Id:       uint64(4),
 		RunnerId: "test_runner_id",
@@ -44,7 +44,7 @@ func createTestInferJob() (job *pb.Job) {
 
 
 func createTestContainer() (container *Container) {
-	job := createTestTrainJob()
+	job := CreateTestTrainJob()
 	container = &Container{
 		Name:    "123456789",
 		ID:      "123456789",

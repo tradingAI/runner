@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/golang/glog"
+	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
 func (p *TbasePlugin) ParseBar(encode string) (currentStep uint32, totalSteps uint32, err error) {
@@ -30,5 +31,13 @@ func (p *TbasePlugin) ParseBar(encode string) (currentStep uint32, totalSteps ui
 		return
 	}
 	totalSteps = uint32(totalStepsI64)
+	return
+}
+
+func (p *TbasePlugin) ParseEval(encode string) (out *pb.JobOutput, err error) {
+	return
+}
+
+func (p *TbasePlugin) ParseInfer(encode string) (out *pb.JobOutput, err error) {
 	return
 }

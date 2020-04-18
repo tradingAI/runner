@@ -24,6 +24,7 @@ type Conf struct {
 	InferDir         string
 	EvalDir          string
 	SchedulerHost    string
+	Token            string
 }
 
 // LoadConf load config from env
@@ -66,6 +67,7 @@ func LoadConf() (conf *Conf, err error) {
 		InferDir:         plugins.INFER_DIR,
 		EvalDir:          plugins.EVAL_DIR,
 		SchedulerHost:    os.Getenv("SCHEDULER_HOST"),
+		Token:            os.Getenv("RUNNER_TOKEN"),
 	}
 
 	if err = conf.Validate(); err != nil {

@@ -26,7 +26,7 @@ vtest: clean
 
 clean_minio:
 	rm -rf /tmp/runner/minio/data/*
-	
+
 # docker test
 dtest: clean_minio
 	docker-compose up test
@@ -57,3 +57,7 @@ rm_run:
 prod:
 	docker pull registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
 	docker-compose -f starter/docker-compose-prod.yml up
+
+regtest:
+	docker system prune
+	go run experiment/runner/regtest.go
