@@ -19,7 +19,7 @@ func (r *Runner) UpdateEvalOutput(job *pb.Job, p plugins.Plugin) (err error) {
 			glog.Error(err)
 			return err
 		}
-		evalOutput, err := p.ParseEval(string(content))
+		evalOutput, err := p.ParseEval(string(content), job.Id, job.Id)
 		job.Output = evalOutput
 		return err
 	}
@@ -35,7 +35,7 @@ func (r *Runner) UpdateInferOutput(job *pb.Job, p plugins.Plugin) (err error) {
 			glog.Error(err)
 			return err
 		}
-		inferOutput, err := p.ParseInfer(string(content))
+		inferOutput, err := p.ParseInfer(string(content), job.GetInput().GetInferInput().Date, job.Id, job.Id)
 		job.Output = inferOutput
 		return err
 	}
@@ -63,43 +63,43 @@ func (r *Runner) UpdateOutput(job *pb.Job) (err error) {
 		glog.Error(err)
 		return
 	}
-	err = r.UpdateEvalOutput(job, p)
-	if err != nil {
-		glog.Error(err)
-		return
+	if job.Type == pb.JobType_EVALUATION ||  job.Type == pb.JobType_TRAIN {
+		err = r.UpdateEvalOutput(job, p)
+		if err != nil {
+			glog.Error(err)
+			return
+		}
 	}
-	err = r.UpdateInferOutput(job, p)
-	if err != nil {
-		glog.Error(err)
-		return
+	if job.Type == pb.JobType_INFER {
+		err = r.UpdateInferOutput(job, p)
+		if err != nil {
+			glog.Error(err)
+			return
+		}
 	}
 	return
 }
 
 // upload files: model, tensorboard
-// Update job.output clean dirs and files: model dir, job log, tensorboard dir, evals, infers, shells, progress_bars
-func (r *Runner) UpdateJob(job *pb.Job) (err error) {
+// Update job.output clean dirs and files: model dir, job log, tensorboard dir, evals, infers, progress_bars
+func (r *Runner) FinishedJob(job *pb.Job) (err error) {
+	defer r.Clean(strconv.FormatUint(job.Id, 10))
 	if job.Type == pb.JobType_TRAIN {
 		err = r.uploadTrainModel(job)
 		if err != nil {
 			glog.Error(err)
-			job.Status = pb.JobStatus_FAILED
 			return
 		}
 		err = r.uploadTensorboard(job)
 		if err != nil {
 			glog.Error(err)
-			job.Status = pb.JobStatus_FAILED
 			return
 		}
 	}
 	err = r.UpdateOutput(job)
 	if err != nil {
 		glog.Error(err)
-		job.Status = pb.JobStatus_FAILED
 		return
 	}
-	r.Clean(strconv.FormatUint(job.Id, 10))
-	job.Status = pb.JobStatus_SUCCESSED
 	return
 }

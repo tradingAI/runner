@@ -39,7 +39,7 @@ class TbaseRunner(TRunner):
             logger.info("Finished, tensorboard --logdir=%s" %
                         args.tensorboard_dir)
         # eval models
-        if args.eval:
+        if not args.infer:
             eval_env = make_eval_env(args=args)
             agent.eval(eval_env, args)
 

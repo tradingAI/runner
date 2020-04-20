@@ -112,6 +112,8 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 		job.Status = pb.JobStatus_FAILED
 		return err
 	}
+	job.Status = pb.JobStatus_SUCCESSED
+	glog.Infof("runner %s clean job %d, container id: %s", r.ID, job.Id, resp.ID)
 	return
 }
 
@@ -134,7 +136,7 @@ func (r *Runner) StopJob(job *pb.Job) (err error) {
 		glog.Error(err)
 		return err
 	}
-	err = r.UpdateJob(job)
+	err = r.FinishedJob(job)
 	if err != nil {
 		glog.Error(err)
 		return err
