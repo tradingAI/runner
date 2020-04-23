@@ -18,3 +18,10 @@ Job runner
 - linux
     - 配置环境变量:(TODO:wen)
     - docker-compose -f starter/docker-compose-prod up -d
+
+## Checklist(errors)
+- [ ] Job正常运行完，应清除runner上所有job的信息，包括日志(ELK上已经保存了日志)
+- [ ] Job运行时内部error
+- [ ] 手动kill container
+- [ ] 手动kill runner
+- [ ] graceful stop runner

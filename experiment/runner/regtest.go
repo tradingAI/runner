@@ -64,5 +64,7 @@ func testCreateJobs(r *runner.Runner) {
 	job4 := newCreateInferJob(inferJobId, trainJobId2, r.ID)
 	jobs = []*pb.Job{job3, job4}
 	r.RunJobs(jobs)
-
+	if job1.Status == pb.JobStatus_SUCCESSED {
+		glog.Info("testCreateJobs job1 successed")
+	}
 }

@@ -39,6 +39,7 @@ func (r *Runner) createShellFile(job *pb.Job, p plugins.Plugin) (err error) {
 	}
 	for _, cmd := range commands {
 		line := fmt.Sprintf("%s\n", cmd)
+		glog.Info(line)
 		f.Write([]byte(line))
 	}
 	return

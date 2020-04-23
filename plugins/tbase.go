@@ -91,11 +91,10 @@ func (p *TbasePlugin) getEvalJobCmds(input *pb.JobInput, id string) (cmds []stri
 	// https://github.com/tradingAI/tbase/blob/2ccac243409fe93c15c0ceb4cff9fe419166590e/Dockerfile
 	cmds = append(cmds, "cd /root/trade/tbase")
 	cmds = append(cmds, "pip install trunner --upgrade")
-	modelDir := path.Join(MODEL_DIR, id)
-	evalDir := path.Join(EVAL_DIR, id)
+	evalPath := path.Join(EVAL_DIR, id)
 	// tbase会读取model中的meta 版本信息，自动checkout到相应版本运行程序
 	runCmd := fmt.Sprintf("python -m trunner.tbase --eval --model_dir %s --eval_result_path %s --eval_start %s --eval_end %s",
-		modelDir, evalDir, start, end)
+		MODEL_DIR, evalPath, start, end)
 	cmds = append(cmds, runCmd)
 	return
 }
@@ -105,11 +104,10 @@ func (p *TbasePlugin) getInferJobCmds(input *pb.JobInput, id string) (cmds []str
 	// https://github.com/tradingAI/tbase/blob/21a72ee53b7b7c2c1a976d8e1c2a6d858de64564/Dockerfile#L12
 	cmds = append(cmds, "cd /root/trade/tbase")
 	cmds = append(cmds, "pip install trunner --upgrade")
-	modelDir := path.Join(MODEL_DIR, id)
 	inferPath := path.Join(INFER_DIR, id)
 	// tbase会读取model中的meta 版本信息，自动checkout到相应版本运行程序
 	runCmd := fmt.Sprintf("python -m trunner.tbase --infer --model_dir %s --infer_result_path %s --infer_date %s",
-		modelDir, inferPath, inferDate)
+		MODEL_DIR, inferPath, inferDate)
 	cmds = append(cmds, runCmd)
 	return
 }

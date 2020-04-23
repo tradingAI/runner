@@ -61,15 +61,6 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 	jobIdStr := strconv.FormatUint(job.Id, 10)
 	logFilePath := r.createLogFile(jobIdStr)
 
-	if job.Type == pb.JobType_INFER || job.Type == pb.JobType_EVALUATION {
-		_, err = r.downloadAndUnarchiveModel(job)
-		if err != nil {
-			glog.Error(err)
-			job.Status = pb.JobStatus_FAILED
-			return
-		}
-	}
-
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image:        DEFAULT_IMAGE,
 		Cmd:          r.getCmd(path.Join(r.Conf.JobShellDir, jobIdStr)),
@@ -120,14 +111,14 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 		}
 	case <-statusCh:
 		glog.Infof("runner %s completed job %d, container id: %s", r.ID, job.Id, resp.ID)
-		err = r.StopJob(job)
-		if err != nil {
-			glog.Error(err)
-			job.Status = pb.JobStatus_FAILED
-			return err
-		}
-		job.Status = pb.JobStatus_SUCCESSED
-		glog.Infof("runner %s clean job %d, container id: %s", r.ID, job.Id, resp.ID)
+		// err = r.StopJob(job)
+		// if err != nil {
+		// 	glog.Error(err)
+		// 	job.Status = pb.JobStatus_FAILED
+		// 	return err
+		// }
+		// job.Status = pb.JobStatus_SUCCESSED
+		// glog.Infof("runner %s clean job %d, container id: %s", r.ID, job.Id, resp.ID)
 		return
 	}
 	return

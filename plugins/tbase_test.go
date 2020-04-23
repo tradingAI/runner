@@ -39,7 +39,7 @@ func TestTbaseGenerateEvalCmds(t *testing.T) {
 	p := NewTbasePlugin()
 	input := CreateDefaultTbaseEvalJobInput()
 	actual, _ := p.GenerateCmds(input, "0")
-	runCmd := fmt.Sprintf("python -m trunner.tbase --eval --model_dir %smodels/0 --eval_result_path %sevals/0 --eval_start 20190101 --eval_end 20200101",
+	runCmd := fmt.Sprintf("python -m trunner.tbase --eval --model_dir %smodels --eval_result_path %sevals/0 --eval_start 20190101 --eval_end 20200101",
 		ROOT_DATA_DIR, ROOT_DATA_DIR)
 	expected := []string{
 		"cd /root/trade/tbase",
@@ -53,7 +53,7 @@ func TestTbaseGenerateInferCmds(t *testing.T) {
 	p := NewTbasePlugin()
 	input := CreateDefaultTbaseInferJobInput()
 	actual, _ := p.GenerateCmds(input, "0")
-	runCmd := fmt.Sprintf("python -m trunner.tbase --infer --model_dir %smodels/0 --infer_result_path %sinfers/0 --infer_date 20200101",
+	runCmd := fmt.Sprintf("python -m trunner.tbase --infer --model_dir %smodels --infer_result_path %sinfers/0 --infer_date 20200101",
 		ROOT_DATA_DIR, ROOT_DATA_DIR)
 	expected := []string{
 		"cd /root/trade/tbase",
