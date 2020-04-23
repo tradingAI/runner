@@ -24,28 +24,28 @@ func NewTbasePlugin() (p *TbasePlugin) {
 func (p *TbasePlugin) GenerateCmds(input *pb.JobInput, id string) (cmds []string, err error) {
 	switch input.GetInput().(type) {
 	case *pb.JobInput_EvalInput:
-		glog.Info("JobInput_EvalInput")
+		glog.Info("runner: GenerateCmds for JobInput_EvalInput")
 		cmds, err = p.getEvalJobCmds(input, id)
 		if err != nil {
 			glog.Error(err)
 			return
 		}
 	case *pb.JobInput_InferInput:
-		glog.Info("JobInput_InferInput")
+		glog.Info("runner: GenerateCmds for JobInput_InferInput")
 		cmds, err = p.getInferJobCmds(input, id)
 		if err != nil {
 			glog.Error(err)
 			return
 		}
 	case *pb.JobInput_TrainInput:
-		glog.Info("JobInput_TrainInput")
+		glog.Info("runner: GenerateCmds for JobInput_TrainInput")
 		cmds, err = p.getTrainJobCmds(input, id)
 		if err != nil {
 			glog.Error(err)
 			return
 		}
 	default:
-		err = errors.New("plugins GenerateCmds input invalid")
+		err = errors.New("runner GenerateCmds: plugins GenerateCmds input invalid")
 		glog.Error(err)
 		return
 	}

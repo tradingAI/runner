@@ -61,21 +61,21 @@ func testCreateJobs(r *runner.Runner) {
 	job2 := newCreateTrainJob(trainJobId2, r.ID)
 	jobs = []*pb.Job{job1, job2}
 	r.RunJobs(jobs)
+	if job1.Status != pb.JobStatus_SUCCESSED {
+		glog.Error("testCreateJobs job1 Failed")
+	}
+	if job2.Status != pb.JobStatus_SUCCESSED {
+		glog.Error("testCreateJobs job2 Failed")
+	}
+
 	job3 := newCreateEvalJob(evalJobId, trainJobId1, r.ID)
 	job4 := newCreateInferJob(inferJobId, trainJobId2, r.ID)
 	jobs = []*pb.Job{job3, job4}
 	r.RunJobs(jobs)
-	if job1.Status == pb.JobStatus_SUCCESSED {
-		glog.Info("testCreateJobs job1 successed")
+	if job3.Status != pb.JobStatus_SUCCESSED {
+		glog.Error("testCreateJobs job3 Failed")
 	}
-	if job2.Status == pb.JobStatus_SUCCESSED {
-		glog.Info("testCreateJobs job2 successed")
-	}
-
-	if job3.Status == pb.JobStatus_SUCCESSED {
-		glog.Info("testCreateJobs job3 successed")
-	}
-	if job4.Status == pb.JobStatus_SUCCESSED {
-		glog.Info("testCreateJobs job4 successed")
+	if job4.Status != pb.JobStatus_SUCCESSED {
+		glog.Error("testCreateJobs job4 Failed")
 	}
 }

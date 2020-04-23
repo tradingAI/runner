@@ -30,7 +30,6 @@ func (r *Runner) UpdateInferOutput(job *pb.Job, p plugins.Plugin) (err error) {
 	if job.Type == pb.JobType_INFER {
 		id := strconv.FormatUint(job.Id, 10)
 		filePath := path.Join(r.Conf.InferDir, id)
-		glog.Info(filePath)
 		content, err := ioutil.ReadFile(filePath)
 		if err != nil {
 			glog.Error(err)

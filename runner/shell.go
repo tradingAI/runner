@@ -32,7 +32,6 @@ func (r *Runner) createShellFile(job *pb.Job, p plugins.Plugin) (err error) {
 	}
 	defer f.Close()
 	commands, err := p.GenerateCmds(job.Input, id)
-	glog.Infof("GenerateCmds len %d", cap(commands))
 	if err != nil {
 		glog.Error(err)
 		return

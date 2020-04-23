@@ -64,5 +64,5 @@ prod:
 	docker-compose -f starter/docker-compose-prod.yml up
 
 regtest: clean
-	docker system prune
+	docker system prune -f
 	go run experiment/runner/regtest.go
