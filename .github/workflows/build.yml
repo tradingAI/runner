@@ -2,7 +2,8 @@ name: Docker
 
 on:
   push:
-    branches: [ master ]
+      # TODO: remove by rpc branch pr
+      branches: [ master, rpc ]
 
 jobs:
   test:
