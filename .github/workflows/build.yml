@@ -2,8 +2,7 @@ name: Docker
 
 on:
   push:
-      # TODO: remove rpc before merge
-      branches: [master, rpc]
+      branches: [ master ]
 
 jobs:
   test:
