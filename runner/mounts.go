@@ -67,7 +67,7 @@ func (r *Runner) getTbaseInferMount(id string) (m mount.Mount) {
 }
 
 func (r *Runner) getTbaseEvalMount(id string) (m mount.Mount) {
-	mustCreateDir(r.Conf.EvalDir)
+	mustCreateDir(plugins.EVAL_DIR)
 	return mount.Mount{
 		Type:   mount.TypeBind,
 		Source: plugins.EVAL_DIR,

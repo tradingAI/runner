@@ -10,10 +10,10 @@ import (
 )
 
 const (
-	trainJobId1 = uint64(123)
-	trainJobId2 = uint64(456)
-	evalJobId   = uint64(3)
-	inferJobId  = uint64(4)
+	trainJobId1 = uint64(1111)
+	trainJobId2 = uint64(2222)
+	evalJobId   = uint64(3333)
+	inferJobId  = uint64(4444)
 )
 
 func main() {
@@ -60,4 +60,9 @@ func testCreateJobs(r *runner.Runner) {
 	job2 := newCreateTrainJob(trainJobId2, r.ID)
 	jobs := []*pb.Job{job1, job2}
 	r.RunJobs(jobs)
+	job3 := newCreateEvalJob(evalJobId, trainJobId1, r.ID)
+	job4 := newCreateInferJob(inferJobId, trainJobId2, r.ID)
+	jobs = []*pb.Job{job3, job4}
+	r.RunJobs(jobs)
+
 }

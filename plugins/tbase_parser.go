@@ -24,7 +24,7 @@ func (p *TbasePlugin) getBaseStrategy(name string) (s mpb.BaseStrategy) {
 func (p *TbasePlugin) ParseBar(encode string) (currentStep uint32, totalSteps uint32, err error) {
 	values := strings.Split(encode, p.Sep)
 	if cap(values) != 2 {
-		err = errors.New(fmt.Sprintf("TbasePlugin ParseBar input invalid encode: %s, expected: currentStep, totalSteps", encode))
+		err = fmt.Errorf("TbasePlugin ParseBar input invalid encode=[%s] expected[currentStep, totalSteps]", encode)
 		glog.Error(err)
 		return
 	}
@@ -52,37 +52,37 @@ func (p *TbasePlugin) ParseEval(encode string, jobId, modelId uint64) (out *pb.J
 		return
 	}
 
-	absoluteReturn, err := strconv.ParseFloat(values[0], 32)
+	absoluteReturn, err := strconv.ParseFloat(strings.TrimSpace(values[0]), 32)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 
-	annualizedReturn, err := strconv.ParseFloat(values[1], 32)
+	annualizedReturn, err := strconv.ParseFloat(strings.TrimSpace(values[1]), 32)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 
-	maxDrawdown, err := strconv.ParseFloat(values[2], 32)
+	maxDrawdown, err := strconv.ParseFloat(strings.TrimSpace(values[2]), 32)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 
-	sharpeRatio, err := strconv.ParseFloat(values[3], 32)
+	sharpeRatio, err := strconv.ParseFloat(strings.TrimSpace(values[3]), 32)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 
-	absoluteExcessValue, err := strconv.ParseFloat(values[6], 32)
+	absoluteExcessValue, err := strconv.ParseFloat(strings.TrimSpace(values[6]), 32)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 
-	annualizedExcessValue, err := strconv.ParseFloat(values[7], 32)
+	annualizedExcessValue, err := strconv.ParseFloat(strings.TrimSpace(values[7]), 32)
 	if err != nil {
 		glog.Error(err)
 		return

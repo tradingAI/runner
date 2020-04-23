@@ -15,6 +15,10 @@ update:
 clean:
 	rm -rf /tmp/runner/data/models/*
 	rm -rf /tmp/runner/data/tensorboards/*
+	rm -rf /tmp/runner/data/evals/*
+	rm -rf /tmp/runner/data/infers/*
+	rm -rf /tmp/runner/data/logs/*
+	rm -rf /tmp/runner/data/shells/*
 	cp -R ./runner/testdata/upload/model/* /tmp/runner/data/models/
 	cp -R ./runner/testdata/upload/tensorboard/* /tmp/runner/data/tensorboards/
 

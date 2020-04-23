@@ -13,7 +13,7 @@ import (
 func (r *Runner) UpdateEvalOutput(job *pb.Job, p plugins.Plugin) (err error) {
 	if job.Type == pb.JobType_EVALUATION || job.Type == pb.JobType_TRAIN {
 		id := strconv.FormatUint(job.Id, 10)
-		filePath := path.Join(r.Conf.EvalDir, id, "eval.txt")
+		filePath := path.Join(r.Conf.EvalDir, id)
 		content, err := ioutil.ReadFile(filePath)
 		if err != nil {
 			glog.Error(err)
@@ -29,7 +29,7 @@ func (r *Runner) UpdateEvalOutput(job *pb.Job, p plugins.Plugin) (err error) {
 func (r *Runner) UpdateInferOutput(job *pb.Job, p plugins.Plugin) (err error) {
 	if job.Type == pb.JobType_INFER {
 		id := strconv.FormatUint(job.Id, 10)
-		filePath := path.Join(r.Conf.InferDir, id, "infer.txt")
+		filePath := path.Join(r.Conf.InferDir, id)
 		content, err := ioutil.ReadFile(filePath)
 		if err != nil {
 			glog.Error(err)
@@ -43,14 +43,23 @@ func (r *Runner) UpdateInferOutput(job *pb.Job, p plugins.Plugin) (err error) {
 }
 
 func (r *Runner) UpdateBar(job *pb.Job, p plugins.Plugin) (err error) {
+	if job.Type != pb.JobType_TRAIN {
+		job.CurrentStep = uint32(0)
+		job.TotalSteps = uint32(1)
+		return nil
+	}
 	id := strconv.FormatUint(job.Id, 10)
-	filePath := path.Join(r.Conf.JobLogDir, id)
+	filePath := path.Join(r.Conf.ProgressBarDir, id)
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		glog.Error(err)
 		return
 	}
 	currentStep, totalSteps, err := p.ParseBar(string(content))
+	if err != nil {
+		glog.Error(err)
+		return
+	}
 	job.CurrentStep = currentStep
 	job.TotalSteps = totalSteps
 	return

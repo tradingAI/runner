@@ -32,9 +32,7 @@ func Unarchive(srcPath, destDir string) (err error) {
 }
 
 func DeleteFile(filePath string) (err error) {
-	glog.Infof("Runner DeleteFile: %s", filePath)
 	if _, err = os.Stat(filePath); os.IsNotExist(err) {
-		glog.Infof("Runner DeleteFile: %s is not exist!", filePath)
 		return nil
 	}
 	err = os.Remove(filePath)
@@ -47,9 +45,7 @@ func DeleteFile(filePath string) (err error) {
 }
 
 func DeleteDirectory(dir string) (err error) {
-	glog.Infof("Runner DeleteDirectory: %s", dir)
 	if _, err = os.Stat(dir); os.IsNotExist(err) {
-		glog.Infof("Runner DeleteDirectory: %s is not exist!", dir)
 		return nil
 	}
 	err = os.RemoveAll(dir)
