@@ -142,7 +142,7 @@ func (p *TbasePlugin) getInferActionType(act string) (t mpb.ActionType, err erro
 }
 
 func (p *TbasePlugin) ParseInfer(encode, date string, jobId, modelId uint64) (out *pb.JobOutput, err error) {
-	lines := strings.Split(encode, "\n")
+	lines := strings.Split(strings.TrimSpace(encode), "\n")
 	actions := []*mpb.TbaseAction{}
 	for _, line := range lines {
 		values := strings.Split(line, p.Sep)
@@ -151,15 +151,15 @@ func (p *TbasePlugin) ParseInfer(encode, date string, jobId, modelId uint64) (ou
 			glog.Error(err)
 			return
 		}
-		actType, err := p.getInferActionType(values[0])
+		actType, err := p.getInferActionType(strings.TrimSpace(values[0]))
 		if err != nil {
 			glog.Error(err)
 			return nil, err
 		}
 		action := &mpb.TbaseAction{
 			ActionType: actType,
-			Value: values[1],
-			Code: values[2],
+			Value: strings.TrimSpace(values[1]), // TODO: values to float32
+			Code: strings.TrimSpace(values[2]), // TODO: values to float32
 		}
 		actions = append(actions, action)
 	}

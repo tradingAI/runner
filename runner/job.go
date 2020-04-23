@@ -111,14 +111,14 @@ func (r *Runner) CreateJob(job *pb.Job) (err error) {
 		}
 	case <-statusCh:
 		glog.Infof("runner %s completed job %d, container id: %s", r.ID, job.Id, resp.ID)
-		// err = r.StopJob(job)
-		// if err != nil {
-		// 	glog.Error(err)
-		// 	job.Status = pb.JobStatus_FAILED
-		// 	return err
-		// }
-		// job.Status = pb.JobStatus_SUCCESSED
-		// glog.Infof("runner %s clean job %d, container id: %s", r.ID, job.Id, resp.ID)
+		err = r.StopJob(job)
+		if err != nil {
+			glog.Error(err)
+			job.Status = pb.JobStatus_FAILED
+			return err
+		}
+		job.Status = pb.JobStatus_SUCCESSED
+		glog.Infof("runner %s clean job %d, container id: %s", r.ID, job.Id, resp.ID)
 		return
 	}
 	return

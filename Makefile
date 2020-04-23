@@ -19,6 +19,7 @@ clean:
 	rm -rf /tmp/runner/data/infers/*
 	rm -rf /tmp/runner/data/logs/*
 	rm -rf /tmp/runner/data/shells/*
+	rm -rf /tmp/runner/data/progress_bars/*
 	cp -R ./runner/testdata/upload/model/* /tmp/runner/data/models/
 	cp -R ./runner/testdata/upload/tensorboard/* /tmp/runner/data/tensorboards/
 
@@ -62,6 +63,6 @@ prod:
 	docker pull registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
 	docker-compose -f starter/docker-compose-prod.yml up
 
-regtest:
+regtest: clean
 	docker system prune
 	go run experiment/runner/regtest.go

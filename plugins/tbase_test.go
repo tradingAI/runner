@@ -22,7 +22,7 @@ func TestTbaseGenerateTrainCmds(t *testing.T) {
 	p := NewTbasePlugin()
 	input := CreateDefaultTbaseTrainJobInput()
 	actual, _ := p.GenerateCmds(input, "0")
-	runCmd := fmt.Sprintf("python -m trunner.tbase --alg ddpg --eval_result_path %sevals/0 --max_iter_num 10 --model_dir %smodels --progress_bar_path %sprogress_bars/0 --tensorboard_dir %stensorboards --warm_up 1000",
+	runCmd := fmt.Sprintf("python -m trunner.tbase --alg ddpg --eval_result_path %sevals/0 --max_iter_num 10 --model_dir %smodels --progress_bar_path %sprogress_bars/0 --seed 0 --tensorboard_dir %stensorboards --warm_up 1000",
 		ROOT_DATA_DIR, ROOT_DATA_DIR, ROOT_DATA_DIR, ROOT_DATA_DIR)
 	expected := []string{
 		"cd /root/trade/tenvs && git pull",
