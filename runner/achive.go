@@ -32,6 +32,9 @@ func Unarchive(srcPath, destDir string) (err error) {
 }
 
 func DeleteFile(filePath string) (err error) {
+	if _, err = os.Stat(filePath); os.IsNotExist(err) {
+		return nil
+	}
 	err = os.Remove(filePath)
 	if err != nil {
 		glog.Error(err)
@@ -42,6 +45,9 @@ func DeleteFile(filePath string) (err error) {
 }
 
 func DeleteDirectory(dir string) (err error) {
+	if _, err = os.Stat(dir); os.IsNotExist(err) {
+		return nil
+	}
 	err = os.RemoveAll(dir)
 	if err != nil {
 		glog.Error(err)

@@ -21,6 +21,7 @@ func CreateDefaultTbaseTrainJobInput() (input *pb.JobInput) {
 	parameters["alg"] = "ddpg"
 	parameters["max_iter_num"] = "10"
 	parameters["warm_up"] = "1000"
+	parameters["seed"] = "0"
 
 	trainInput := &mpb.TbaseTrainInput{
 		TenvsTag:   "v1.0.8",

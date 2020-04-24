@@ -1,28 +1,34 @@
 package runner
 
 import (
+	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang/glog"
+	"github.com/google/uuid"
 	minio "github.com/tradingAI/go/s3/minio"
 	pb "github.com/tradingAI/proto/gen/go/scheduler"
-	"github.com/tradingAI/runner/plugins"
+	"google.golang.org/grpc"
 )
 
 type Runner struct {
-	Conf       Conf
-	Minio      *minio.Client
-	ID         string
-	Token      string
-	Containers map[uint64]Container // key: jobID, value: Container
+	Conf            *Conf
+	Minio           *minio.Client
+	ID              string
+	Containers      map[uint64]Container // key: jobID, value: Container
+	Machine         *Machine
+	schedulerClient pb.SchedulerClient
+	schedulerConn   *grpc.ClientConn
+	Status          pb.RunnerStatus
 }
 
-func New(conf Conf) (r *Runner, err error) {
+func New(conf *Conf) (r *Runner, err error) {
 	// make runner
 	r = &Runner{
-		Conf:  conf,
-		ID:    "test_runner_id", // TODO: use uuid
-		Token: "test_token",     // TODO: use evn token
+		Conf: conf,
+		ID:   uuid.New().String(),
 	}
 
 	r.Minio, err = minio.NewMinioClient(r.Conf.Minio)
@@ -32,16 +38,23 @@ func New(conf Conf) (r *Runner, err error) {
 	}
 
 	r.Containers = make(map[uint64]Container)
-
+	machine, err := NewMachine()
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+	r.Machine = machine
+	err = r.Machine.Update()
+	if err != nil {
+		glog.Error(err)
+		return
+	}
 	return
 }
 
 func (r *Runner) StartOrDie() (err error) {
 	glog.Info("Starting runner")
 	r.Heartbeat()
-	r.Listen()
-	// TODO: remove , 测试用
-	r.Conf.HeartbeatSeconds = 1500
 	d := time.Duration(int64(time.Second) * int64(r.Conf.HeartbeatSeconds))
 	t := time.NewTicker(d)
 	defer t.Stop()
@@ -49,9 +62,6 @@ func (r *Runner) StartOrDie() (err error) {
 	for {
 		<-t.C
 		r.Heartbeat()
-		r.Listen()
-		// TODO: remove 本地测试用
-		return
 	}
 	return
 }
@@ -60,59 +70,108 @@ func (r *Runner) Free() {
 	return
 }
 
+func (r *Runner) updateStatus() {
+	if len(r.Containers) > 0 {
+		r.Status = pb.RunnerStatus_BUSY
+	} else {
+		r.Status = pb.RunnerStatus_IDLE
+	}
+}
+
 func (r *Runner) Heartbeat() (err error) {
 	glog.Infof("runner[%s] heartbeat", r.ID)
 	r.refreshBars()
-	// TODO: collect machine info call rpc hearbeat
+	// update machine info
+	err = r.Machine.Update()
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+	r.updateStatus()
+	var jobs []*pb.Job
+	for _, c := range r.Containers {
+		jobs = append(jobs, c.Job)
+	}
+	pbRunner := &pb.Runner{
+		Id:                 r.ID,
+		Status:             r.Status,
+		Jobs:               jobs,
+		CpuCoreNum:         r.Machine.CPUNum,
+		CpuUtilization:     r.Machine.CPUUtilization,
+		GpuNum:             r.Machine.GPUNum,
+		GpusIndex:          r.Machine.GPUsIndex,
+		GpuUtilization:     r.Machine.GPUUtilization,
+		Memory:             r.Machine.Memory,
+		AvailableMemory:    r.Machine.AvailableMemory,
+		GpuMemory:          r.Machine.GPUMemory,
+		AvailableGpuMemory: r.Machine.AvailableGPUMemory,
+	}
+	glog.Infof("runner pbRunner %v", pbRunner)
+	glog.Infof("r.Machine.CPUUtilization: %.3f", r.Machine.CPUUtilization)
+	req := &pb.HeartBeatRequest{
+		Runner: pbRunner,
+	}
+	conn, err := grpc.Dial(r.Conf.SchedulerHost, grpc.WithInsecure(), grpc.WithBlock(), grpc.WithTimeout(10))
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+	defer conn.Close()
+	schedulerClient := pb.NewSchedulerClient(conn)
+
+	resp, err := schedulerClient.HeartBeat(context.Background(), req)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+
+	if !resp.Ok {
+		err = errors.New("Runner heartbeat: scheduler rpc server err response")
+		glog.Error(err)
+		return
+	}
+	r.RunJobs(resp.Jobs)
 	return
 }
 
-func (r *Runner) getCreateJobFromRedis() (job *pb.Job, err error) {
-	// TODO
-	job = &pb.Job{
-		Id:       uint64(123456789),
-		RunnerId: r.ID,
-		Type:     pb.JobType_TRAIN,
-		Input:    plugins.CreateDefaultTbaseTrainJobInput(),
+// NOTE(wen): 一个job出现错误，不影响runner继续执行, 所以没有返回error
+func (r *Runner) RunJobs(jobs []*pb.Job) {
+	for _, job := range jobs {
+		glog.Infof("Runner RunJobs: job.id=%d", job.Id)
+		r.RunJob(job)
 	}
-	return job, nil
 }
 
-func (r *Runner) getStopJobFromRedis() (job *pb.Job, err error) {
-	// TODO
-	// job = &pb.Job{
-	// 	Id:       uint64(123456789),
-	// 	RunnerId: r.ID,
-	// 	Type:     pb.JobType_TRAIN,
-	// }
-	// return job, nil
-	return nil, nil
-}
+func (r *Runner) RunJob(job *pb.Job) (err error) {
+	glog.Infof("Runner RunJob: job=[%v]", job)
+	switch job.Status {
+	case pb.JobStatus_CREATED:
+		glog.Infof("Runner RunJob: creating job.id=%d", job.Id)
+		job.Status = pb.JobStatus_RUNNING
+		err = r.CreateJob(job)
+		if err != nil {
+			glog.Error(err)
+			job.Status = pb.JobStatus_FAILED
+			return
+		}
+		job.Status = pb.JobStatus_SUCCESSED
+		return
+	case pb.JobStatus_CANCELLED:
+		glog.Infof("Runner RunJob: stopping job.id=%d", job.Id)
+		err = r.StopJob(job)
+		if err != nil {
+			glog.Error(err)
+			job.Status = pb.JobStatus_FAILED
+		}
+		job.Status = pb.JobStatus_CANCELLED
+		// TODO: 重新定义stop状态, stopped
+		return
+	default:
+		err = errors.New(fmt.Sprintf("Runner RunJob error: invalid job status %v", job))
+		glog.Error(err)
+		job.Status = pb.JobStatus_FAILED
+		return
+	}
 
-func (r *Runner) Listen() (err error) {
-	glog.Infof("runner[%s] listen job from redis", r.ID)
-	// TODO: listen redis status and excute actions
-	// create
-	createJob, _ := r.getCreateJobFromRedis()
-	if createJob != nil {
-		go func(r *Runner) {
-			err := r.CreateJob(createJob)
-			if err != nil {
-				glog.Error(err)
-			}
-		}(r)
-	}
-	// TODO: 删除sleep, 暂时用于本地测试用
-	time.Sleep(15 * time.Second)
-	// stop
-	stopJob, _ := r.getStopJobFromRedis()
-	if stopJob != nil {
-		go func(r *Runner) {
-			err := r.StopJob(stopJob.Id)
-			if err != nil {
-				glog.Error(err)
-			}
-		}(r)
-	}
 	return
 }

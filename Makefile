@@ -15,6 +15,11 @@ update:
 clean:
 	rm -rf /tmp/runner/data/models/*
 	rm -rf /tmp/runner/data/tensorboards/*
+	rm -rf /tmp/runner/data/evals/*
+	rm -rf /tmp/runner/data/infers/*
+	rm -rf /tmp/runner/data/logs/*
+	rm -rf /tmp/runner/data/shells/*
+	rm -rf /tmp/runner/data/progress_bars/*
 	cp -R ./runner/testdata/upload/model/* /tmp/runner/data/models/
 	cp -R ./runner/testdata/upload/tensorboard/* /tmp/runner/data/tensorboards/
 
@@ -26,7 +31,7 @@ vtest: clean
 
 clean_minio:
 	rm -rf /tmp/runner/minio/data/*
-	
+
 # docker test
 dtest: clean_minio
 	docker-compose up test
@@ -57,3 +62,7 @@ rm_run:
 prod:
 	docker pull registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
 	docker-compose -f starter/docker-compose-prod.yml up
+
+regtest: clean
+	docker system prune -f
+	go run experiment/runner/regtest.go

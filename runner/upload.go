@@ -15,6 +15,7 @@ import (
 const UPLOAD_CONTENT_TYPE = "application/zip"
 
 func (r *Runner) uploadTrainModel(job *pb.Job) (err error) {
+	glog.Infof("Runner uplading train model job.id=%d", job.Id)
 	id := strconv.FormatUint(job.Id, 10)
 	dir := path.Join(r.Conf.ModelDir, id)
 	// achive
@@ -42,6 +43,7 @@ func (r *Runner) uploadTrainModel(job *pb.Job) (err error) {
 }
 
 func (r *Runner) uploadTensorboard(job *pb.Job) (err error) {
+	glog.Infof("Runner uplading tensorboard event job.id=%d", job.Id)
 	id := strconv.FormatUint(job.Id, 10)
 	dir := path.Join(r.Conf.TensorboardDir, id)
 	// achive
