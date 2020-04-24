@@ -111,7 +111,7 @@ func (r *Runner) Heartbeat() (err error) {
 	req := &pb.HeartBeatRequest{
 		Runner: pbRunner,
 	}
-	conn, err := grpc.Dial(r.Conf.SchedulerHost, grpc.WithInsecure(), grpc.WithBlock())
+	conn, err := grpc.Dial(r.Conf.SchedulerHost, grpc.WithInsecure(), grpc.WithBlock(), grpc.WithTimeout(10))
 	if err != nil {
 		glog.Error(err)
 		return
