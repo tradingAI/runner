@@ -4,8 +4,6 @@ on:
   push:
       branches:
           - master
-          # TODO: remove rpc
-          - rpc
 
 jobs:
   test:
