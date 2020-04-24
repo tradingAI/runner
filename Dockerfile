@@ -19,7 +19,7 @@ WORKDIR ${PROJECT_PATH}
 RUN make build_linux
 
 # run-time image
-FROM alpine
+FROM docker:19.03.8
 
 Label maintainer="liuwen.w@qq.com"
 

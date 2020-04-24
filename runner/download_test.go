@@ -9,7 +9,7 @@ import (
 
 func TestDownloadAndUnarchiveModel(t *testing.T) {
 	r := creatTestRunner()
-	trainJob := createTestTrainJob()
+	trainJob := CreateTestTrainJob()
 	trainJob.Id = uint64(22222)
 	modelDir, err := r.downloadAndUnarchiveModel(trainJob)
 	assert.NotNil(t, err)
@@ -19,7 +19,7 @@ func TestDownloadAndUnarchiveModel(t *testing.T) {
 	// upload test model for test
 	err = r.uploadTrainModel(trainJob)
 	assert.Nil(t, err)
-	evalJob := createTestEvalJob()
+	evalJob := CreateTestEvalJob()
 	modelDir, err = r.downloadAndUnarchiveModel(evalJob)
 	assert.Nil(t, err)
 	expectedDir := path.Join(r.Conf.ModelDir, "3")
@@ -27,7 +27,7 @@ func TestDownloadAndUnarchiveModel(t *testing.T) {
 	DeleteDirectory(modelDir)
 	DeleteFile(path.Join(r.Conf.ModelDir, "3.zip"))
 	// infer job
-	inferJob := createTestInferJob()
+	inferJob := CreateTestInferJob()
 	modelDir, err = r.downloadAndUnarchiveModel(inferJob)
 	assert.Nil(t, err)
 	expectedDir = path.Join(r.Conf.ModelDir, "4")

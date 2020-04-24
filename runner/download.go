@@ -80,6 +80,7 @@ func (r *Runner) getMinioInfo(job *pb.Job) (bucket, objName string, err error) {
 }
 
 func (r *Runner) downloadAndUnarchiveModel(job *pb.Job) (modelDir string, err error) {
+	glog.Infof("Runner downloading model: job.id=%d", job.Id)
 	fileName, err := r.getFileName(job)
 	if err != nil {
 		glog.Error(err)

@@ -3,7 +3,6 @@ package runner
 import (
 	"bufio"
 	"context"
-	"fmt"
 	"os"
 	"path"
 
@@ -19,8 +18,7 @@ func (r *Runner) createLogFile(id string) (logFilePath string) {
 			glog.Error(err)
 		}
 	}
-	logFileName := fmt.Sprintf("%s.log", id)
-	logFilePath = path.Join(r.Conf.JobLogDir, logFileName)
+	logFilePath = path.Join(r.Conf.JobLogDir, id)
 	f, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		glog.Error(err)
@@ -37,6 +35,7 @@ func writeLog(containerId string, filePath string) (err error) {
 		glog.Error(err)
 		return
 	}
+	defer cli.Close()
 
 	reader, err := cli.ContainerLogs(ctx, containerId, types.ContainerLogsOptions{
 		ShowStdout: true,
@@ -67,7 +66,7 @@ func writeLog(containerId string, filePath string) (err error) {
 		_, err = f.Write([]byte(scanner.Text() + "\n"))
 		if err != nil {
 			glog.Error(err)
-			continue
+			return
 		}
 	}
 	if err != nil {

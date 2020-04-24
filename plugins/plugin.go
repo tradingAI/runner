@@ -19,6 +19,8 @@ var EVAL_DIR = path.Join(ROOT_DATA_DIR, "evals")
 type Plugin interface {
 	GenerateCmds(input *pb.JobInput, id string) (cmds []string, err error)
 	ParseBar(encode string) (currentStep uint32, totalSteps uint32, err error)
+	ParseEval(encode string, jobId, modelId uint64) (out *pb.JobOutput, err error)
+	ParseInfer(encode, date string, jobId, modelId uint64) (out *pb.JobOutput, err error)
 }
 
 func New(job *pb.Job) (p Plugin) {

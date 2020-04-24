@@ -17,9 +17,10 @@ type Machine struct {
 	GPUNum             int32
 	GPUsIndex          []int32
 	GPUMemory          int64
+	GPUUtilization     float64
 	AvailableGPUMemory int64
 	CPUNum             int32
-	CPUUtilization     float32
+	CPUUtilization     float64
 	Memory             int64
 	AvailableMemory    int64
 }
@@ -47,7 +48,7 @@ func NewMachine() (m *Machine, err error) {
 		return
 	}
 	m = &Machine{
-		gpuAvailable: gpuAvailable,
+		gpuAvailable:    gpuAvailable,
 		CPUNum:          cpuNum,
 		Memory:          totalMemory,
 		AvailableMemory: availableMemeory,
@@ -89,15 +90,18 @@ func (m *Machine) UpdateMemory() (err error) {
 }
 
 func (m *Machine) UpdateCPUUtilization() (err error) {
-	cpuUtilizations, err := cpu.Percent(time.Duration(0), false)
+	percents, err := cpu.Percent(time.Duration(0), false)
 	if err != nil {
 		if err != nil {
 			glog.Error(err)
 			return
 		}
 	}
-	// 从百分比 转化为比例(0-1)
-	m.CPUUtilization = float32(cpuUtilizations[0]) * 0.01
+
+	for _, p := range percents {
+		// 从百分比 转化为比例(0-1)
+		m.CPUUtilization += p * 0.01
+	}
 	return
 }
 

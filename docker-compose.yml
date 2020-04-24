@@ -14,13 +14,14 @@ services:
       RUNNER_MINIO_SECURE: 'false'
       HEARTBEAT_SECONDS: 10
       RUNNER_DATA_DIR: /root/runner/data/
+      SCHEDULER_HOST: localhost:8889
+      RUNNER_TOKEN: test_token
     depends_on:
         - minio
     volumes:
       - .:/go/src/github.com/tradingAI/runner/
       - ./runner/testdata/upload/model/:/root/runner/data/models/
       - ./runner/testdata/upload/tensorboard/:/root/runner/data/tensorboards/
-      # - /tmp/runner/data/:/root/runner/data/:rw
 
   minio:
     image: minio/minio:latest

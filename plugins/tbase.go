@@ -24,28 +24,28 @@ func NewTbasePlugin() (p *TbasePlugin) {
 func (p *TbasePlugin) GenerateCmds(input *pb.JobInput, id string) (cmds []string, err error) {
 	switch input.GetInput().(type) {
 	case *pb.JobInput_EvalInput:
-		glog.Info("JobInput_EvalInput")
+		glog.Info("runner: GenerateCmds for JobInput_EvalInput")
 		cmds, err = p.getEvalJobCmds(input, id)
 		if err != nil {
 			glog.Error(err)
 			return
 		}
 	case *pb.JobInput_InferInput:
-		glog.Info("JobInput_InferInput")
+		glog.Info("runner: GenerateCmds for JobInput_InferInput")
 		cmds, err = p.getInferJobCmds(input, id)
 		if err != nil {
 			glog.Error(err)
 			return
 		}
 	case *pb.JobInput_TrainInput:
-		glog.Info("JobInput_TrainInput")
+		glog.Info("runner: GenerateCmds for JobInput_TrainInput")
 		cmds, err = p.getTrainJobCmds(input, id)
 		if err != nil {
 			glog.Error(err)
 			return
 		}
 	default:
-		err = errors.New("plugins GenerateCmds input invalid")
+		err = errors.New("runner GenerateCmds: plugins GenerateCmds input invalid")
 		glog.Error(err)
 		return
 	}
@@ -62,12 +62,16 @@ func (p *TbasePlugin) getTrainJobCmds(input *pb.JobInput, id string) (cmds []str
 	tbaseTag := input.GetTrainInput().GetTbaseTag()
 	installTbaseCmds := GetTbaseInstallRepoCmds("tbase", tbaseTag)
 	cmds = append(cmds, installTbaseCmds...)
+	// TODO: remove -i https://pypi.org/simple after merged into master(build)
+	cmds = append(cmds, "pip install -i https://pypi.org/simple trunner --upgrade")
 	// run commands
 	parametersStr := ""
 	parameters := input.GetTrainInput().GetParameters()
 	parameters["model_dir"] = MODEL_DIR
 	parameters["progress_bar_path"] = path.Join(PROGRESS_BAR_DIR, id)
 	parameters["tensorboard_dir"] = TENSORBOARD_DIR
+	parameters["eval_result_path"] = path.Join(EVAL_DIR, id)
+
 	sorted_keys := make([]string, 0)
 	for k, _ := range parameters {
 		sorted_keys = append(sorted_keys, k)
@@ -86,11 +90,11 @@ func (p *TbasePlugin) getEvalJobCmds(input *pb.JobInput, id string) (cmds []stri
 	end := input.GetEvalInput().GetEnd()
 	// https://github.com/tradingAI/tbase/blob/2ccac243409fe93c15c0ceb4cff9fe419166590e/Dockerfile
 	cmds = append(cmds, "cd /root/trade/tbase")
-	modelDir := path.Join(MODEL_DIR, id)
-	evalDir := path.Join(EVAL_DIR, id)
+	cmds = append(cmds, "pip install trunner --upgrade")
+	evalPath := path.Join(EVAL_DIR, id)
 	// tbase会读取model中的meta 版本信息，自动checkout到相应版本运行程序
 	runCmd := fmt.Sprintf("python -m trunner.tbase --eval --model_dir %s --eval_result_path %s --eval_start %s --eval_end %s",
-		modelDir, evalDir, start, end)
+		MODEL_DIR, evalPath, start, end)
 	cmds = append(cmds, runCmd)
 	return
 }
@@ -99,11 +103,11 @@ func (p *TbasePlugin) getInferJobCmds(input *pb.JobInput, id string) (cmds []str
 	inferDate := input.GetInferInput().GetDate()
 	// https://github.com/tradingAI/tbase/blob/21a72ee53b7b7c2c1a976d8e1c2a6d858de64564/Dockerfile#L12
 	cmds = append(cmds, "cd /root/trade/tbase")
-	modelDir := path.Join(MODEL_DIR, id)
+	cmds = append(cmds, "pip install trunner --upgrade")
 	inferPath := path.Join(INFER_DIR, id)
 	// tbase会读取model中的meta 版本信息，自动checkout到相应版本运行程序
 	runCmd := fmt.Sprintf("python -m trunner.tbase --infer --model_dir %s --infer_result_path %s --infer_date %s",
-		modelDir, inferPath, inferDate)
+		MODEL_DIR, inferPath, inferDate)
 	cmds = append(cmds, runCmd)
 	return
 }
