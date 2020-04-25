@@ -13,6 +13,7 @@ update:
 	go mod tidy
 
 clean:
+	# docker system prune -f
 	rm -rf /tmp/runner/data/models/*
 	rm -rf /tmp/runner/data/tensorboards/*
 	rm -rf /tmp/runner/data/evals/*
@@ -20,7 +21,9 @@ clean:
 	rm -rf /tmp/runner/data/logs/*
 	rm -rf /tmp/runner/data/shells/*
 	rm -rf /tmp/runner/data/progress_bars/*
+	mkdir -p /tmp/runner/data/models
 	cp -R ./runner/testdata/upload/model/* /tmp/runner/data/models/
+	mkdir -p /tmp/runner/data/tensorboards
 	cp -R ./runner/testdata/upload/tensorboard/* /tmp/runner/data/tensorboards/
 
 test: clean
@@ -63,6 +66,5 @@ prod:
 	docker pull registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
 	docker-compose -f starter/docker-compose-prod.yml up
 
-regtest: clean
-	docker system prune -f
-	go run experiment/runner/regtest.go
+mockserv:
+	go run experiment/mock_scheduler/mock_scheduler.go

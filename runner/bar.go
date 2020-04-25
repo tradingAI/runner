@@ -6,10 +6,14 @@ import (
 	"strconv"
 
 	"github.com/golang/glog"
+	pb "github.com/tradingAI/proto/gen/go/scheduler"
 )
 
 func (r *Runner) refreshBars() (err error) {
 	for _, container := range r.Containers {
+		if container.Job.Status == pb.JobStatus_SUCCESSED {
+			continue
+		}
 		id := strconv.FormatUint(container.Job.Id, 10)
 		barPath := path.Join(r.Conf.ProgressBarDir, id)
 		err = container.refreshBar(barPath)

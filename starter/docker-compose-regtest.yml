@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  runner:
+    image: registry.cn-hangzhou.aliyuncs.com/tradingai/runner:latest
+    environment:
+      TUSHARE_TOKEN: ${TUSHARE_TOKEN}
+      RUNNER_MINIO_ACCESS_KEY: ${RUNNER_MINIO_ACCESS_KEY}
+      RUNNER_MINIO_SECRET_KEY: ${RUNNER_MINIO_SECRET_KEY}
+      RUNNER_MINIO_HOST: ${RUNNER_MINIO_HOST}
+      RUNNER_MINIO_PORT: ${RUNNER_MINIO_PORT}
+      RUNNER_MINIO_SECURE: ${RUNNER_MINIO_SECURE}
+      HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
+      RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
+      RUNNER_TOKEN: ${RUNNER_TOKEN}
+      SCHEDULER_HOST: scheduler
+      SCHEDULER_PORT: ${SCHEDULER_PORT}
+      RUNNER_TOKEN: ${RUNNER_TOKEN}
+    depends_on:
+        - minio
+        - scheduler
+    command:
+        /runner
+    volumes:
+      - ..:/go/src/github.com/tradingAI/runner
+      - ${RUNNER_DATA_DIR}:/root/runner/data/:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  minio:
+    image: minio/minio:latest
+    ports:
+      - ${RUNNER_MINIO_PORT}:${RUNNER_MINIO_PORT}
+    environment:
+      MINIO_ACCESS_KEY: ${RUNNER_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${RUNNER_MINIO_SECRET_KEY}
+    volumes:
+      - /tmp/runner/minio/data:/tmp/runner/minio/data:rw
+    command:
+        server /tmp/runner/minio/data
+
+  scheduler:
+    image: tradingai/bazel:latest
+    environment:
+      SCHEDULER_PORT: ${SCHEDULER_PORT}
+    ports:
+      - ${SCHEDULER_PORT}:${SCHEDULER_PORT}
+    command:
+      bash /go/src/github.com/tradingAI/runner/starter/run-scheduler.sh
+    volumes:
+      - ..:/go/src/github.com/tradingAI/runner
