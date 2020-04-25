@@ -151,6 +151,7 @@ func (r *Runner) RunJobs(jobs []*pb.Job) {
 		go func(r *Runner) {
 			r.RunJob(job)
 		}(r)
+		// NOTE(wen): 每执行一个Job等待1秒, 否则会出现跳过执行的情况
 		time.Sleep(1 * time.Second)
 	}
 }
