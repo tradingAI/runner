@@ -24,6 +24,7 @@ type Conf struct {
 	InferDir         string
 	EvalDir          string
 	SchedulerHost    string
+	SchedulerPort    string
 	Token            string
 }
 
@@ -67,6 +68,7 @@ func LoadConf() (conf *Conf, err error) {
 		InferDir:         plugins.INFER_DIR,
 		EvalDir:          plugins.EVAL_DIR,
 		SchedulerHost:    os.Getenv("SCHEDULER_HOST"),
+		SchedulerPort:    os.Getenv("SCHEDULER_PORT"),
 		Token:            os.Getenv("RUNNER_TOKEN"),
 	}
 

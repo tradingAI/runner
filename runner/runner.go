@@ -61,7 +61,9 @@ func (r *Runner) StartOrDie() (err error) {
 
 	for {
 		<-t.C
-		r.Heartbeat()
+		go func(r *Runner) {
+			r.Heartbeat()
+		}(r)
 	}
 	return
 }
@@ -111,8 +113,10 @@ func (r *Runner) Heartbeat() (err error) {
 	req := &pb.HeartBeatRequest{
 		Runner: pbRunner,
 	}
-	conn, err := grpc.Dial(r.Conf.SchedulerHost, grpc.WithInsecure(), grpc.WithBlock(), grpc.WithTimeout(10))
+	hostAdd := fmt.Sprintf("%s:%s", r.Conf.SchedulerHost, r.Conf.SchedulerPort)
+	conn, err := grpc.Dial(hostAdd, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
+		glog.Errorf("%v", r.Conf.SchedulerHost)
 		glog.Error(err)
 		return
 	}
@@ -123,6 +127,12 @@ func (r *Runner) Heartbeat() (err error) {
 	if err != nil {
 		glog.Error(err)
 		return
+	}
+	// 清除已经完成或者已经失败的Containers
+	for id, c := range r.Containers {
+		if c.Job.Status == pb.JobStatus_FAILED || c.Job.Status == pb.JobStatus_SUCCESSED {
+			delete(r.Containers, id)
+		}
 	}
 
 	if !resp.Ok {
@@ -138,7 +148,10 @@ func (r *Runner) Heartbeat() (err error) {
 func (r *Runner) RunJobs(jobs []*pb.Job) {
 	for _, job := range jobs {
 		glog.Infof("Runner RunJobs: job.id=%d", job.Id)
-		r.RunJob(job)
+		go func(r *Runner) {
+			r.RunJob(job)
+		}(r)
+		time.Sleep(1 * time.Second)
 	}
 }
 
