@@ -29,7 +29,7 @@ services:
   minio:
     image: minio/minio:latest
     ports:
-      - 9000:9000
+      - ${RUNNER_MINIO_PORT}:${RUNNER_MINIO_PORT}
     environment:
       MINIO_ACCESS_KEY: ${RUNNER_MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${RUNNER_MINIO_SECRET_KEY}
