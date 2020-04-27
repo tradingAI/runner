@@ -13,7 +13,7 @@ services:
       HEARTBEAT_SECONDS: ${HEARTBEAT_SECONDS}
       RUNNER_DATA_DIR: ${RUNNER_DATA_DIR}
       RUNNER_TOKEN: ${RUNNER_TOKEN}
-      SCHEDULER_HOST: scheduler
+      SCHEDULER_HOST: ${SCHEDULER_HOST}
       SCHEDULER_PORT: ${SCHEDULER_PORT}
       RUNNER_TOKEN: ${RUNNER_TOKEN}
     depends_on:
@@ -23,7 +23,7 @@ services:
         /runner
     volumes:
       - ..:/go/src/github.com/tradingAI/runner
-      - ${RUNNER_DATA_DIR}:/root/runner/data/:rw
+      - ${RUNNER_DATA_DIR}:${RUNNER_DATA_DIR}:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   minio:

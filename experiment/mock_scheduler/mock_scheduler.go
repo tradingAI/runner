@@ -87,7 +87,13 @@ func (s *server) HeartBeat(ctx context.Context, req *pb.HeartBeatRequest) (resp 
 		}
 	}
 	s.numHeartbeat += 1
-
+	if  s.numHeartbeat >= 25 {
+		return &pb.HeartBeatResponse{
+			Ok:      true,
+			Jobs:    newJobs,
+			Destory: true,
+		}, nil
+	}
 	return &pb.HeartBeatResponse{
 		Ok:      true,
 		Jobs:    newJobs,
