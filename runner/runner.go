@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/golang/glog"
@@ -128,6 +129,13 @@ func (r *Runner) Heartbeat() (err error) {
 		glog.Error(err)
 		return
 	}
+	if resp.Destory {
+		err = r.Destory()
+		if err != nil {
+			glog.Error(err)
+			return
+		}
+	}
 	// 清除已经完成或者已经失败的Containers
 	for id, c := range r.Containers {
 		if c.Job.Status == pb.JobStatus_FAILED || c.Job.Status == pb.JobStatus_SUCCESSED {
@@ -187,5 +195,18 @@ func (r *Runner) RunJob(job *pb.Job) (err error) {
 		return
 	}
 
+	return
+}
+
+func (r *Runner) Destory() (err error) {
+	for _, c := range r.Containers {
+		err = r.StopJob(c.Job)
+		if err != nil {
+			glog.Error(err)
+		}
+		return
+	}
+	glog.Info("runner Destory success")
+	os.Exit(0)
 	return
 }

@@ -1,0 +1,17 @@
+filebeat.inputs:
+    - type: log
+      enabled: true
+      paths:
+          # logs dir for ${RUNNER_DATA_DIR}/logs
+          - /tmp/runner/logs/*
+
+tail_files: true
+close_removed: true
+
+setup.kibana:
+  host: elk.aiminders.com:5601
+  username: elastic
+  password: ${ELK_PASSWORD}
+
+output.logstash:
+  hosts: ["elk.aiminders.com:5044"]
